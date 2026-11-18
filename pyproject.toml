@@ -1,0 +1,25 @@
+[project]
+name = "dsci-522-predicting-global-flood-impact-and-damage"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "efrendon", email = "everettfr@hotmail.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "ipykernel=7.4.0",
+    "jupyterlab=4.6.6",
+    "openpyxl=3.1.5",
+    "pandas=3.1.1",
+]
+
+[project.scripts]
+dsci-522-predicting-global-flood-impact-and-damage = "dsci_522_predicting_global_flood_impact_and_damage:main"
+
+[build-system]
+requires = ["uv_build>=0.12.17,<0.13.0"]
+build-backend = "uv_build"
+
+[tools.uv]
+add-bounds = "exact"
