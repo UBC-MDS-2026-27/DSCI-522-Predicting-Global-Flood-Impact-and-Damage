@@ -1,33 +1,26 @@
-# Code of Conduct
+# Contributing
 
-As contributors and maintainers of this project, and in the interest of fostering an open and welcoming community, we pledge to respect all people who contribute through reporting issues, posting feature requests, updating documentation, submitting pull requests or patches, and other activities.
+We welcome feedback, bug reports, suggestions and contributions to this data analysis project. Please follow our [Code of Conduct](CODE_OF_CONDUCT.md).
 
-We are committed to making participation in this project a harassment-free experience for everyone, regardless of level of experience, gender, gender identity and expression, sexual orientation, disability, personal appearance, body size, race, ethnicity, age, religion, or nationality.
+## Report a Bug or Suggest a Change
+Create an associated issue in this repository. For a bug, illustrate the bug by describe how to reproduce it including at least one a error message. For a suggestion, explain what you want to change and the reason.
 
-Examples of acceptable behavior by participants include:
-- Treating contributors with respect
-- Providing feedback focus on the work only
-- Welcome questions and contributions from people with different backgrounds
-- Communicating openly and friendly when disagreements arise
+## Set up environment
+clone the repository by 
+```bash
+git clone https://github.com/UBC-MDS-2026-27/DSCI-522-Predicting-Global-Flood-Impact-and-Damage.git
+uv sync
+```
 
-Examples of unacceptable behavior by participants include:
-- The use of sexualized language or imagery
-- Personal attacks
-- Trolling or insulting/derogatory comments
-- Public or private harassment
-- Publishing other's private information, such as physical or electronic addresses, without explicit permission
-- Other unethical or unprofessional conduct
+The detailed instructions to run the analysis lies in [README](README.md).
 
-Project maintainers have the right and responsibility to remove, edit, or reject comments, commits, code, wiki edits, issues, and other contributions that are not aligned to this Code of Conduct, or to ban temporarily or permanently any contributor for other behaviors that they deem inappropriate, threatening, offensive, or harmful.
+## Make a Change
+Please make changes after create your own banch:
+```bash
+git switch -c your-branch-name
+```
 
-By adopting this Code of Conduct, project maintainers commit themselves to fairly and consistently applying these principles to every aspect of managing this project. Project maintainers who do not follow or enforce the Code of Conduct may be permanently removed from the project team.
+## AI Policy
+If you are using generative AI, please follow the AI policy below:
+Every team member is responsible for understanding and checking any code or text they submit, whether or not AI helped write it. Pull requests and GitHub issues are opened by team members, never by an AI agent or chat bot. We may use AI agents to help double-check the code before merging pull requests, but ultimately it is human reviewers who make the final decisions and merge the pull requests. Contributors must keep track of their AI usage in their pull request, including the tool used, how it was used, representative prompts could been included.
 
-This Code of Conduct applies both within project spaces and in public spaces when an individual is representing the project or its community.
-
-To report a possible violation, email the project maintainers at
-ffang05@student.ubc.ca. Please include a description of what happened and,
-if available, relevant links or screenshots. The maintainers will review
-the report, contact the people involved when appropriate, and decide on
-a response. Reports will be handled privately to the extent possible.
-If the report concerns a maintainer, it will be reviewed by another
-team member.
