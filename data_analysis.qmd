@@ -1,0 +1,36 @@
+---
+title: "Predicting Global Flood Casualties"
+author: "Everett Rendon, Niroshan Benjamin, Abdullah Naeem, Fang Fang"
+format: html
+jupyter: python3
+---
+
+# Summary
+
+# Introduction
+
+abcdef
+
+# Methods
+
+Data is initially downloaded directly from **Archfield et al.** to the raw data folder via the code in `data-import-and-cleaning-code`.
+
+```{python}
+
+
+
+```
+
+# Results
+
+# Discussion
+
+# References
+
+Magers, B.M., Najibi, N., Troy, T.J., Arumugam, S., Jutla, A.S., Allaire, M., Lima, C., Kim, S., Hwang, J., Bae, K., Barth, N.A, Drakes, O., Archfield, S.A., and Devineni, N., 2026, The Global Flood Impacts Database (GFID): A globally aggregated and geocoded flood disaster impacts database: U.S. Geological Survey data release, https://doi.org/10.5066/P135ARGI.
+
+Source 2
+
+Source 3
+
+Source 4
