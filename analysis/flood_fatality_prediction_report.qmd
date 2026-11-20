@@ -1,0 +1,119 @@
+---
+title: "Predicting Flood Fatality Given a Flood's Location and Severity"
+author: "Abdullah Naeem, Niroshan Benjamin, Everett Rendon, [add name] "
+date: "2026/11/19"
+jupyter: python3
+---
+
+```{python}
+from urllib.request import urlretrieve
+import pandas as pd
+import os 
+from sklearn.model_selection import train_test_split
+from sklearn.compose import make_column_transformer
+from sklearn.impute import SimpleImputer
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+```
+
+# Summary 
+
+## [Summary placeholder]
+
+# Introduction
+
+## [Introduction placeholder]
+
+# Methods 
+
+## [Methods placeholder]
+
+## Data
+
+```{python}
+# Function to download raw data folder and save it locally.
+def data_download_xlsx(url, save_dir, name):
+    """Download an original .xlsx file and save it locally.
+
+    Args:
+        url: URL where the raw .xlsx file is stored.
+        save_dir: Relative path where the downloaded data will be stored.
+        name: Name for the downloaded file, no extension.
+    """
+    save_target = f"{save_dir}/{name}.xlsx"
+    os.makedirs(save_dir, exist_ok=True)
+    if not os.path.exists(save_target):
+        urlretrieve(url, save_target)
+```
+
+```{python}
+# Saving raw .xlsx file locally
+data_url="https://www.sciencebase.gov/catalog/file/get/69e7e00db66b0164d0f7302d?f=__disk__c3%2F44%2Fd6%2Fc344d62cc5d115d408726fb52d9d459c6e1b5ed1"
+data_dir = "../data/raw"
+name="Aggregated_Flood_Data"
+
+data_download_xlsx(data_url, data_dir, name)
+```
+
+```{python}
+# Reading in the raw data into a dataframe
+df = pd.read_excel("../data/raw/Aggregated_Flood_Data.xlsx", sheet_name="Aggregated")
+
+start = pd.to_datetime(df["Start Date"], errors="coerce")
+end = pd.to_datetime(df["End Date"], errors="coerce")
+df["Duration"] = (end - start).dt.days.clip(lower=0)
+
+df = df[df["Year"].between(1900, 2026)].dropna(subset=["Fatalities"])
+
+numeric_features = ["Year", "Lat", "Lon", "Duration", "Affected", "Injured"]
+categorical_features = ["Country"]
+
+X = df[numeric_features + categorical_features]
+y = (df["Fatalities"] >= 1).astype(int)
+
+X.shape, y.value_counts(normalize=True)
+```
+
+```{python}
+# Save cleaned dataset to data/processed
+os.makedirs("../data/processed", exist_ok=True)
+cleaned_df = X.assign(Fatal = y)
+cleaned_df.to_csv("../data/processed/flood_data_cleaned.csv", index=False)
+```
+
+## Analysis
+
+```{python}
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, stratify=y, random_state=522
+)
+
+print(X_train.shape, X_test.shape)
+print(y_train.mean().round(4), y_test.mean().round(4))
+```
+
+```{python}
+preprocessor = make_column_transformer(
+    (make_pipeline(SimpleImputer(strategy="median"), StandardScaler()), numeric_features),
+    (make_pipeline(SimpleImputer(strategy="most_frequent"), OneHotEncoder(handle_unknown="ignore")), categorical_features),
+)
+
+X_train_proc = preprocessor.fit_transform(X_train)
+X_test_proc = preprocessor.transform(X_test)
+
+X_train_proc.shape, X_test_proc.shape
+```
+
+
+
+# Results
+
+## [Results placeholder]
+
+# Discussion 
+
+## [Discussion placeholder]
+
+# References
+
+## [References placeholder]
