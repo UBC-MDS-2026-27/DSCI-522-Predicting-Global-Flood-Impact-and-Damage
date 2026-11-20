@@ -9,6 +9,7 @@ Create an associated issue in this repository. For a bug, illustrate the bug by 
 clone the repository by 
 ```bash
 git clone https://github.com/UBC-MDS-2026-27/DSCI-522-Predicting-Global-Flood-Impact-and-Damage.git
+cd DSCI-522-Predicting-Global-Flood-Impact-and-Damage
 uv sync
 ```
 
