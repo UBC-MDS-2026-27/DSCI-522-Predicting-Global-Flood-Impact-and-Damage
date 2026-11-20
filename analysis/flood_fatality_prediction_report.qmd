@@ -1,6 +1,6 @@
 ---
 title: "Predicting Flood Fatality Given a Flood's Location and Severity"
-author: "Abdullah Naeem, Niroshan Benjamin, Everett Rendon, [add name] "
+author: "Abdullah Naeem, Niroshan Benjamin, Everett Rendon, Fang Fang"
 date: "2026/11/19"
 jupyter: python3
 ---
@@ -55,7 +55,7 @@ name="Aggregated_Flood_Data"
 data_download_xlsx(data_url, data_dir, name)
 ```
 
-Despite the improvements the authors made in cleaning the data over the disparate collections seen in the other sheets, more cleaning was necessary prior to our modeling. Steps included the conversion of dates to `pandas` datetime objects, the dropping of rows containing a fatality entry of N/A (given that fatalities are our target, we can do no modeling using such rows), and the dropping of columns with either not enough entries to be usable for our examination or content irrelevant to our examination (such as unique identifiers).
+Despite the improvements the authors made in cleaning the data from the disparate collections seen in the other sheets, more cleaning was necessary prior to our modeling. Steps included the conversion of dates to `pandas` datetime objects, the dropping of rows containing a fatality entry of N/A (given that fatalities are our target, we can do no modeling using such rows), and the dropping of columns with either not enough entries to be usable for our examination or content irrelevant to our examination (such as unique identifiers).
 
 Of the columns, the following were kept and categorized as follows:
 
@@ -63,7 +63,7 @@ Of the columns, the following were kept and categorized as follows:
 
 - Categorical Features: Country
 
-See the code below from for the methodology as well as the corresponding column names within the data. Visualizations within the below analysis section will have expansion on many of these choices, but they were not made until after the data had been properly split to ensure no leakage (beyond our cursory examination of the data). As such, they will come after later once this split has been made.
+See the code below from for the methodology as well as the corresponding column names within the data. Visualizations within the analysis section below will have expansion on many of these choices, but the visualizations were not made until after the data had been properly split to ensure no leakage (beyond our cursory examination of the data). As such, they will come after later once this split has been made.
 
 ```{python}
 # Reading in the raw data into a dataframe
@@ -146,7 +146,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-Geography is a factor we expect to play an important role as well - some countries could be more likely to flood for a number of reasons, be they natural (like climate leading to more heavy rainfall) or human-caused (lack of infrastructure/infrastructure failure stemming from wealth inequality, poor record keeping). Regardless of the reasons, we can see below, some countries have more flood events on record versus others. Due to the size of many of these countries (e.g. Columbia, which spans over 20 degrees of latitude), its possible that latitude and longitude could play part in a model even within a single country - hence their remaining as features even when they may seem redundant alongside country.
+Geography is a factor we expect to play an important role as well - some countries could be more likely to flood for a number of reasons, be they natural (like climate leading to more heavy rainfall) or human-caused (lack of infrastructure/infrastructure failure stemming from wealth inequality, poor record keeping). Regardless of the reasons, we can see below that some countries have more flood events on record versus others. Due to the size of many of these countries (e.g. Columbia, which spans over 20 degrees of latitude), its possible that latitude and longitude could play part in a model even within a single country - hence their remaining as features as well even when they may seem redundant alongside the country data.
 
 ```{python}
 top_10_names = train_df["Country"].value_counts().head(10).index
@@ -175,7 +175,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-Lastly, people affected and people injured were predicted from the outset to play an important role. Note the visualization below to be in log scale on the y-axis - this was necessary to account for the huge variation in fatalities that was present across the data. We can see even on the log scale, however, almost all floods that injured somebody resulted in fatalities - but many floods that just affected people *didn't* result in fatalities.
+Lastly, people affected and people injured were predicted from the outset to play an important role. Note the visualization below to be in log scale on the y-axis - this was necessary to account for the huge variation in fatality counts that were present across the data. We can see even on the log scale, however, almost all floods that injured somebody resulted in fatalities - but many floods that just *affected* people didn't result in fatalities.
 
 ```{python}
 fig, axes = plt.subplots(1, 2, figsize=(15, 8))
@@ -205,7 +205,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-Our preprocesser is constructed as per the numeric and categorical features mentioned before. A column transformer is assembled, with a pipeline utilizing median imputation and scaling of numeric features as well as a pipeline using OneHotEncoder for the country columns, imputing by most frequent.
+Our preprocesser is constructed as per the numeric and categorical features mentioned before. A column transformer is assembled, with a pipeline utilizing median imputation and scaling for numeric features as well as a pipeline using OneHotEncoder for the country columns, imputing by most frequent.
 
 ```{python}
 preprocessor = make_column_transformer(
@@ -221,7 +221,7 @@ X_train_proc.shape, X_test_proc.shape
 
 Given that we seek a classifier, a logistic regression and a decision tree were the two models we evaluated. Additionally, we created a dummy baseline to compare to.
 
-Because only \~17.2% of flood events are fatal (as reflected over time by the graph above), the dummy classifier achieves \~82.8% accuracy just by guessing the majority, but achieves a zero recall, precision, and F1 score. As such, these other metrics of comparison will be crucial in comparing our model's performances vs. one another and the baseline. In particular, F1 will be scored to show a balanced model, and recall will be scored as recall tracks the proportion of fatal floods detected (a critical measure due to the potential human life cost associated with predicting a flood to nonfatal when it in reality is).
+Because only \~17.2% of flood events are fatal (as reflected over time by the graph above), the dummy classifier achieves \~82.8% accuracy just by guessing the majority, but achieves a zero recall, precision, and F1 score. As such, these other metrics of comparison will be crucial in comparing our model's performances vs. one another and the baseline. In particular, F1 will be scored to show a balanced model, and recall will be scored as recall tracks the proportion of fatal floods predicted (a critical measure due to the potential human life cost associated with predicting a flood to nonfatal when it in reality is).
 
 Class weights are assigned as balanced to ensure that fatal floods receive proper representation despite being the minority class. To this end, `StratifiedKFold` was utilized for our cross validation of results, with 5 folds utilized.
 
@@ -258,7 +258,9 @@ cv_results
 
 We can see that the decision tree classifier preformed better in both recall and F1 compared to the logistic regression. As such, we will proceed with that model and work to optimize hyperparameters for it.
 
-Because of the limited computing power available to us and the potential scale of the parameter space, we utilize a randomized search with 10 iterations chosen randomly from a spread of max depths and leaf counts, as seen below. We choose going forward to score the model utilizing just F1 - we would not want the model to overfit the data and maximize recall by inflating the number of floods predicted 'fatal.' As pursuant to the golden rule, no test data is touched during this process.
+Because of the limited computing power available to us and the potential scale of the parameter space, we utilize a randomized search with 10 iterations chosen randomly from a spread of max depths and leaf counts, as seen below. We choose going forward to score the model utilizing just F1 - we would not want the model to overfit the data and maximize recall by inflating the number of floods predicted 'fatal,' as such model behavior could result in wasted first responder efforts. Though recall played an important role in model selection, F1 will be our scoring metric going forward.
+
+As pursuant to the golden rule, no test data is touched during this process.
 
 ```{python}
 dt_pipe = make_pipeline(
@@ -278,11 +280,11 @@ best_model = search.best_estimator_
 search.best_params_, round(search.best_score_, 4)
 ```
 
-From configurations trialed in our search, we find the optimal result to be with minimum leafs at 20, and max depth at 10. We are now prepared to test our model on for final testing and analysis.
+From configurations trialed in our search, we find the optimal result to be with minimum leafs at 20, and max depth at 10. We are now prepared to test our model on the test data set and proceed with analysis.
 
 # Results
 
-We can now utilized our set-aside test data and do a final evaluation of the model.
+We now utilize the set-aside test data and do a final evaluation of the model.
 
 ```{python}
 from sklearn.metrics import ConfusionMatrixDisplay
@@ -320,11 +322,11 @@ Though accuracy was not a metric by which we scored in our random search, it can
 
 # Discussion
 
-While it wasn't a primary metric we scored by while developing the model, we can see that our model ended with an accuracy of 87.86%, am improvement over the baseline 83.3%. This gain was achieved alongside our test F1 score of 0.6633 (compared again to the baseline's 0). Even more notably, the gap between our validation F1 and test F1 is actually an increase of 0.0095 between the two, indicating that the behaviors the model learned were generalizable without overfitting. Overall our model provided a strong improvement over the baseline, and this is what we'd expected to find. Our EDA gave us several promising features to utilize as predictors and the model was able to capitalize off of them to produce a decision tree that generalized well to the test data. There are, however, limitations on our results.
+While it wasn't a primary metric we scored by while developing the model, we can see that our model ended with an accuracy of 87.86%, an improvement over the baseline 83.3%. This gain was achieved alongside our test F1 score of 0.6633 (compared again to the baseline's 0). Even more notably, the gap between our validation F1 and test F1 is actually an increase of 0.0095 between the two, indicating that the behaviors the model learned were generalizable to our test data without overfitting. Overall our model provided a strong improvement over the baseline, and this is what we'd expected to find. Our EDA gave us several promising features to utilize as predictors and the model was able to capitalize off of them to produce a decision tree that generalized well to the test data. There are, however, limitations on our results.
 
-For starters, as seen in the confusion matrix, the model predicts non-fatal 1,351 times when the result was actually fatal. This is an unfortunate result of the trade-off for f1 over recall once we had settled on the decision tree. We wouldn't want a model that inflates false positives for the purpose of maxing out recall as it could waste disaster response efforts where they aren't needed, but our model is going to miss fatal predictions as a result, which could also jeopardize lives as the tradeoff. This limits the model's functionality as a sole disaster-response predictor.
+For starters, as seen in the confusion matrix, the model predicts non-fatal 1,351 times when the result was actually fatal. This is an unfortunate result of the aforementioned trade-off for f1 over recall once we had settled on the decision tree. We wouldn't want a model that inflates false positives for the purpose of maxing out recall as it could waste disaster response efforts where they aren't needed, but our model is going to miss fatal predictions as a result, which could also jeopardize lives as the trade off. This limits the model's functionality as a sole disaster-response predictor.
 
-Additionally, the data itself has limitations as a result of it being a conglomeration of many sources with many entries. As seen below, 1,657 of our initial rows has NA as the entry for our target of fatalities and needed to be removed, which represents \~1.21% of the original data. Other potentially useful indicators (like homes destroyed or damage in \$USD) were only recorded in some sources and thus not prevalent enough in the data to be usable for our purposes. Lastly, the team identified that poor records across sources meant that 8,788 floods in the database were potential duplicates (located within `Potential_Duplicate_Events.csv` in the original report) and could result in the model weighing an event double another by virtue of their being two entries for it.
+Additionally, the data itself has limitations as a result of it being a conglomeration of many sources with many entries. As seen below, 1,657 of our initial rows had NA as the entry for our target of fatalities and needed to be removed, which represents \~1.21% of the original data. Other potentially useful indicators (like homes destroyed or damage in \$USD) were only recorded in some sources and thus not prevalent enough in the data to be usable for our purposes. Lastly, the authors of the paper identified that poor records across sources meant that 8,788 floods in the database were potential duplicates (located within `Potential_Duplicate_Events.csv` in the original report) and could result in the model weighing certain event double by virtue of their being two entries for the same flood.
 
 ```{python}
 df = pd.read_excel("../data/raw/Aggregated_Flood_Data.xlsx", sheet_name="Aggregated")
@@ -332,11 +334,11 @@ print(f'Number of entries with NA as fatalities: {df["Fatalities"].isna().sum()}
 print(f'Percent of entries with NA as fatalities: {100*df["Fatalities"].isna().sum()/len(df):.2f}')
 ```
 
-Though our model has limitations, it could still be useful in disaster response planning and resource allocation. Though it could be argued our threshold of 'any' fatalities might overstate the danger of a given flood in the face of other disasters that need tending to (like annual wildfires or earthquakes), and especially so in the face of some of the maximums present in the data, in the modern world the loss of life from events like this is so preventable that it doesn't take much for an event like this to be classified as a 'disaster.' Public Safety Canada, for example, classifies a disaster as any event that, among other qualifying criteria,, kills 10 or more or affects/injures/evacuates 100 or more people.^2^ The Global Disatser Alert and Coordination System classifies a flood as Green Alert for any and all death or displacement, and Orange Alert (which calls for potential international aid) as \>100 dead or \>80,000 displaced.^3^ **\<---- this part needs citation, I'm pretty sure its correct but the site was down at the time i tried to look.**
+Despite these limitations, our model could still be useful in disaster response planning and resource allocation. Though it could be argued our threshold of 'any' fatalities might overstate the danger of a given flood in the face of other disasters that need tending to (like annual wildfires or earthquakes), and especially so in the face of some of the maximum fatalities counts present in the data, in the modern world the loss of life from events like this is so preventable that it doesn't take much for a flood to be classified as a 'disaster.' Public Safety Canada, for example, classifies a disaster as any event that, among other qualifying criteria,, kills 10 or more or affects/injures/evacuates 100 or more people.^2^ The Global Disatser Alert and Coordination System classifies a flood as Green Alert for any and all death or displacement, and Orange Alert (which calls for potential international aid) as \>100 dead or \>80,000 displaced.^3^ Therefore, the predicted presence of any fatalities and injuries/displacements should be indicative of a flood that has the potential to turn into a humanitarian disaster - and our model is suited for predicting these fatalities.
 
-Our modeling is not unique in the field of data science, either - in April of 2026, the Institute of Electrical and Electronics Engineers published a study that suggested present flood-response tactics are inflexible and allocate resources inefficiently (two assertions that our model hopes to tackle as well). Their proposed system titled FloodMod utilizes a Long-Short-Term-Memory Neural Network, alongside with operator oversight, to handle incoming requests from both disaster response coordinators and individuals who are requesting assistance via a web connection to the service (likely through cell phones or any other way they have to access the internet). The system seeks to streamline operator workload and first-responder efforts by doing much of the heavy computation work of generating optimized plans of response as disaster statistics and help requests come in to the system.^4^ Even this is not the extent of this type of research - this paper alone is built on the back of many other cited papers utilizing LLMs for disaster response planning, earthquake risk severity, and even more impossible-for-a-human topics like interpreting disaster updates from the mass amounts of data posted to social media during a disaster.
+Our modeling is not unique in the field of data science, either - in April of 2026, the Institute of Electrical and Electronics Engineers published a study that suggested present flood-response tactics are inflexible and allocate resources inefficiently (two assertions that our model hopes to tackle as well). Their proposed system titled FloodMod utilizes a Long-Short-Term-Memory Neural Network, alongside operator oversight, to handle incoming requests from both disaster response coordinators and individuals who are requesting assistance via a web connection to the service (likely through cell phones or any other way they have to access the internet). The system seeks to streamline operator workload and first-responder efforts by doing much of the heavy computation work of generating optimized plans for response as disaster statistics and help requests come in to the system.^4^ Even this is not the extent of this type of research - this paper alone is built on the back of many other cited papers utilizing LLMs for disaster response planning, earthquake risk severity, and even more impossible-for-a-human work like interpreting disaster updates from the mass amounts of data posted to social media during such a disaster.
 
-In conclusion, our decision tree model provided a substantial improvement over our baseline and the linear regression it beat out, achieving a test f1 of 0.6633 and a test accuracy of 87.86%. Despite the limitations present within the data and within our model, disaster response planning through predictive modeling is a growing field, and we can expect more research on this topic to be forthcoming in the age of AI. We hope that our model, and others like it, can work to streamline disaster response coordination and work to save lives.
+In conclusion, our decision tree model provided a substantial improvement over our baseline and the linear regression it beat out, achieving a test f1 score of 0.6633 and a test accuracy of 87.86%. Despite the limitations present within the data and within our model, disaster response planning through predictive modeling is a growing field, and we can expect more research on this topic to be forthcoming in the age of AI. We hope that our model, and others like it, can work to streamline disaster response coordination and work to save lives.
 
 # References
 
