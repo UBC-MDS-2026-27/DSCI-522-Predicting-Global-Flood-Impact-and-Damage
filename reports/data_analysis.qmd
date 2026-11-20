@@ -1,0 +1,43 @@
+---
+title: "Predicting Global Flood Casualties"
+author: "Everett Rendon, Niroshan Benjamin, Abdullah Naeem, Fang Fang"
+format: html
+jupyter: python3
+---
+
+# Summary
+
+# Introduction
+
+abcdef
+
+# Methods
+
+Data is initially downloaded directly from *Archfield et al.* to the raw data folder via the code in `data-import-and-cleaning-code`.
+
+```{python}
+
+
+
+```
+
+# Results
+
+# Discussion
+
+
+*we can talk here about metrics by which floods are evaluated - perhaps how our predictor could be used to evaluate disaster scales and necessary responses by predicting fatalities from evolving metrics to evaluate disaster scale*
+
+
+# References
+
+Magers, B.M., Najibi, N., Troy, T.J., Arumugam, S., Jutla, A.S., Allaire, M., Lima, C., Kim, S., Hwang, J., Bae, K., Barth, N.A, Drakes, O., Archfield, S.A., and Devineni, N., 2026, The Global Flood Impacts Database (GFID): A globally aggregated and geocoded flood disaster impacts database: U.S. Geological Survey data release, https://doi.org/10.5066/P135ARGI.
+
+*Potential Source 2*
+Government of Canada. (2015, October 16). Canadian disaster database - data criteria. Public Safety Canada. https://www.publicsafety.gc.ca/cnt/rsrcs/cndn-dsstr-dtbs/dt-crtr-en.aspx 
+
+*Potential Source 3*
+Flood Models. Global Disaster Awareness and Coordination System. (n.d.). https://data.gdacs.org/Knowledge/models_FL.aspx 
+
+
+Source 4
