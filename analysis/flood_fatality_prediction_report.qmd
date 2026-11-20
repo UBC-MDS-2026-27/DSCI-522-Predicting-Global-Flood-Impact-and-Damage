@@ -28,7 +28,7 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 ## Data
 
-This project utilizes an aggregated dataset of global floods published by the U.S. Geological Survey (USGS) and written by *Archfield et al.*^1^ The publication as well as the data can be found [here](https://www.sciencebase.gov/catalog/item/69e7e00db66b0164d0f7302d). The code below from `data-import-code.ipynb` downloads the full data set, `AggregatedFloodData.xlsx` , into the raw data folder. Because of the relatively small file size, the data will also already be present within the repository, but the function `data_download_xlsx` allows for it to be downloaded to any targeted repository if needed. Sheets within the excel file give the sources as originally compiled, while the sheet `Aggregated` gives the full data set as compiled and cleaned by the authors of the paper.
+This project utilizes an aggregated dataset of global floods published by the U.S. Geological Survey (USGS) and written by *Archfield et al.*^1^ The publication as well as the data can be found [here](https://www.sciencebase.gov/catalog/item/69e7e00db66b0164d0f7302d). The code below downloads the full data set, `AggregatedFloodData.xlsx` , into the raw data folder. Because of the relatively small file size, the data will also already be present within the repository, but the function `data_download_xlsx` allows for it to be downloaded to any targeted repository if needed. Sheets within the excel file give the sources as originally compiled, while the sheet `Aggregated` gives the full data set as compiled and cleaned by the authors of the paper.
 
 ```{python}
 # Function to download raw data folder and save it locally.
