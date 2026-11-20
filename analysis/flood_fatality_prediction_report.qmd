@@ -16,19 +16,19 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 ```
 
-# Summary 
+# Summary
 
-## [Summary placeholder]
+## \[Summary placeholder\]
 
 # Introduction
 
-## [Introduction placeholder]
+## \[Introduction placeholder\]
 
-# Methods 
-
-## [Methods placeholder]
+# Methods
 
 ## Data
+
+This project utilizes an aggregated dataset of global floods published by the U.S. Geological Survey (USGS) and written by *Archfield et al.* The publication as well as the data can be found [here](https://www.sciencebase.gov/catalog/item/69e7e00db66b0164d0f7302d). The code below from `data-import-code.ipynb` downloads the full data set, `AggregatedFloodData.xlsx` , into the raw data folder. Because of the relatively small file size, the data will also already be present within the repository, but the function `data_download_xlsx` allows for it to be downloaded to any targeted repository if needed. Sheets within the excel file give the sources as originally compiled, while the sheet `Aggregated` gives the full data set as compiled and cleaned by the authors of the paper.
 
 ```{python}
 # Function to download raw data folder and save it locally.
@@ -55,6 +55,16 @@ name="Aggregated_Flood_Data"
 data_download_xlsx(data_url, data_dir, name)
 ```
 
+Despite the improvements the authors made in cleaning the data over the disparate collections seen in the other sheets, more cleaning was necessary prior to our modeling. Steps included the conversion of dates to `pandas` datetime objects, the dropping of rows containing a fatality entry of N/A (given that fatalities are our target, we can do no modeling using such rows), and the dropping of columns with either not enough entries to be usable for our examination or content irrelevant to our examination (such as unique identifiers).
+
+Of the columns, the following were kept and categorized as follows:
+
+- Numeric Features: Year, Latitude, Longitude, Duration, People affected and People injured
+
+- Categorical Features: Country
+
+See the code below from for the methodology as well as the corresponding column names within the data.
+
 ```{python}
 # Reading in the raw data into a dataframe
 df = pd.read_excel("../data/raw/Aggregated_Flood_Data.xlsx", sheet_name="Aggregated")
@@ -69,19 +79,25 @@ numeric_features = ["Year", "Lat", "Lon", "Duration", "Affected", "Injured"]
 categorical_features = ["Country"]
 
 X = df[numeric_features + categorical_features]
-y = (df["Fatalities"] >= 1).astype(int)
-
-X.shape, y.value_counts(normalize=True)
 ```
 
+Exploratory data analysis revealed that \~83.3% of the floods on record were recorded as having no fatalities. As such, a classifier seemed prudent as our choice of model. We create the target column as a binary: 1 if the flood resulted in fatalities, 0 otherwise. We then save the dataset to the processed data directory.
+
 ```{python}
+y = (df["Fatalities"] >= 1).astype(int)
+X.shape, y.value_counts(normalize=True)
+
 # Save cleaned dataset to data/processed
 os.makedirs("../data/processed", exist_ok=True)
 cleaned_df = X.assign(Fatal = y)
 cleaned_df.to_csv("../data/processed/flood_data_cleaned.csv", index=False)
+
+pd.concat([X,y], axis=1).head()
 ```
 
 ## Analysis
+
+To avoid leakage, we now split our data, with 20% reserved for testing. For replicability, we will set a constant random state of `522` every time randomity is a factor.
 
 ```{python}
 X_train, X_test, y_train, y_test = train_test_split(
@@ -91,6 +107,8 @@ X_train, X_test, y_train, y_test = train_test_split(
 print(X_train.shape, X_test.shape)
 print(y_train.mean().round(4), y_test.mean().round(4))
 ```
+
+Our preprocesser is constructed as per the numeric and categorical features mentioned before. A column transformer is assembled, with a pipeline utilizing median imputation and scaling of numeric features as well as a pipeline using OneHotEncoder for the country columns, imputing by most frequent.
 
 ```{python}
 preprocessor = make_column_transformer(
@@ -104,16 +122,111 @@ X_test_proc = preprocessor.transform(X_test)
 X_train_proc.shape, X_test_proc.shape
 ```
 
+Given that we seek a classifier, a logistic regression and a decision tree were the two models we evaluated. Additionally, we created a dummy baseline to compare to.
 
+Because only \~17.2% of flood events are fatal (as reflected over time by the graph above), the dummy classifier achieves \~82.8% accuracy just by guessing the majority, but achieves a zero recall, precision, and F1 score. As such, these other metrics of comparison will be crucial in comparing our model's performances vs. one another and the baseline. In particular, F1 will be scored to show a balanced model, and recall will be scored as recall tracks the proportion of fatal floods detected (a critical measure due to the potential human life cost associated with predicting a flood to nonfatal when it in reality is).
+
+Class weights are assigned as balanced to ensure that fatal floods receive proper representation despite being the minority class. To this end, `StratifiedKFold` was utilized for our cross validation of results, with 5 folds utilized.
+
+```{python}
+from sklearn.model_selection import StratifiedKFold, cross_validate, RandomizedSearchCV
+from sklearn.dummy import DummyClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import f1_score, recall_score, confusion_matrix
+
+cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=522)
+scoring = ["f1", "recall"]
+
+dummy_pipe = make_pipeline(preprocessor, DummyClassifier(strategy="most_frequent"))
+dummy_scores = cross_validate(dummy_pipe, X_train, y_train, cv=cv, scoring=scoring)
+
+results = {"Dummy": {m: dummy_scores[f"test_{m}"].mean() for m in scoring}}
+pd.DataFrame(results).T.round(4)
+```
+
+```{python}
+models = {
+    "Logistic Regression": make_pipeline(preprocessor, LogisticRegression(max_iter=1000, class_weight="balanced", random_state=522)),
+    "Decision Tree": make_pipeline(preprocessor, DecisionTreeClassifier(max_depth=15, class_weight="balanced", random_state=522)),
+}
+
+for name, pipe in models.items():
+    scores = cross_validate(pipe, X_train, y_train, cv=cv, scoring=scoring)
+    results[name] = {m: scores[f"test_{m}"].mean() for m in scoring}
+
+cv_results = pd.DataFrame(results).T.sort_values("f1", ascending=False).round(4)
+cv_results
+```
+
+We can see that the decision tree classifier preformed better in both recall and F1 compared to the logistic regression. As such, we will proceed with that model and work to optimize hyperparameters for it.
+
+Because of the limited computing power available to us and the potential scale of the parameter space, we utilize a randomized search with 10 iterations chosen randomly from a spread of max depths and leaf counts, as seen below. We choose going forward to score the model utilizing just f1 - we would not want the model to overfit the data and maximize recall by inflating the number of floods predicted 'fatal.' As pursuant to the golden rule, no test data is touched during this process.
+
+```{python}
+dt_pipe = make_pipeline(
+    preprocessor,
+    DecisionTreeClassifier(class_weight="balanced", random_state=522),
+)
+
+param_dist = {
+    "decisiontreeclassifier__max_depth": [5, 10, 15, 20, 30, None],
+    "decisiontreeclassifier__min_samples_leaf": [1, 5, 10, 20],
+}
+
+search = RandomizedSearchCV(dt_pipe, param_dist, n_iter=10, cv=5, scoring="f1", random_state=522)
+search.fit(X_train, y_train)
+
+best_model = search.best_estimator_
+search.best_params_, round(search.best_score_, 4)
+```
+
+From configurations trialed in our search, we find the optimal result to be with minimum leafs at 20, and max depth at 10. We are now prepared to test our model on for final testing and analysis.
 
 # Results
 
-## [Results placeholder]
+We can now utilized our set-aside test data and do a final evaluation of the model.
 
-# Discussion 
+```{python}
 
-## [Discussion placeholder]
+```
+
+Some initial notes: we can visualize the number of fatal floods over time as below - note the time the data spends between \~10% and 30%, consistent with the roughly 18% of floods in the full data set that were recorded as resulting in fatalities. Note as well as the large spike in the modern day, possibly attributable to ease of reporting as a result of the internet or the relative accuracy modern flood assessments could enjoy through modern census methods.
+
+```{python}
+import matplotlib.pyplot as plt 
+import seaborn as sns 
+
+train_df = X_train.assign(Fatal=y_train)
+train_df["Outcome"] = train_df["Fatal"].map({0: "Non-Fatal", 1: "Fatal"})
+
+yearly = (
+    train_df.groupby("Year")["Fatal"]
+    .mean()
+    .mul(100)
+    .reset_index(name="Fatality Rate (%)")
+)
+
+fig, ax = plt.subplots(figsize=(12, 6))
+ax.plot(
+    yearly["Year"],
+    yearly["Fatality Rate (%)"],
+    color=PALETTE["Fatal"],
+    linewidth=2,
+)
+
+ax.set_xlabel("Year")
+ax.set_ylabel("Fatality Rate (%)")
+ax.set_ylim(0, 105)
+ax.set_title("Annual Flood Fatality Rate Over Time (1900–2025, Training Set)")
+plt.tight_layout()
+plt.show()
+```
+
+# Discussion
+
+## \[Discussion placeholder\]
 
 # References
 
-## [References placeholder]
+## \[References placeholder\]
