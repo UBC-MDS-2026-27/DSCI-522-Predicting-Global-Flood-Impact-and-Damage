@@ -28,7 +28,7 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 ## Data
 
-This project utilizes an aggregated dataset of global floods published by the U.S. Geological Survey (USGS) and written by *Archfield et al.* The publication as well as the data can be found [here](https://www.sciencebase.gov/catalog/item/69e7e00db66b0164d0f7302d). The code below from `data-import-code.ipynb` downloads the full data set, `AggregatedFloodData.xlsx` , into the raw data folder. Because of the relatively small file size, the data will also already be present within the repository, but the function `data_download_xlsx` allows for it to be downloaded to any targeted repository if needed. Sheets within the excel file give the sources as originally compiled, while the sheet `Aggregated` gives the full data set as compiled and cleaned by the authors of the paper.
+This project utilizes an aggregated dataset of global floods published by the U.S. Geological Survey (USGS) and written by *Archfield et al.*^1^ The publication as well as the data can be found [here](https://www.sciencebase.gov/catalog/item/69e7e00db66b0164d0f7302d). The code below from `data-import-code.ipynb` downloads the full data set, `AggregatedFloodData.xlsx` , into the raw data folder. Because of the relatively small file size, the data will also already be present within the repository, but the function `data_download_xlsx` allows for it to be downloaded to any targeted repository if needed. Sheets within the excel file give the sources as originally compiled, while the sheet `Aggregated` gives the full data set as compiled and cleaned by the authors of the paper.
 
 ```{python}
 # Function to download raw data folder and save it locally.
@@ -63,7 +63,7 @@ Of the columns, the following were kept and categorized as follows:
 
 - Categorical Features: Country
 
-See the code below from for the methodology as well as the corresponding column names within the data.
+See the code below from for the methodology as well as the corresponding column names within the data. Visualizations within the below analysis section will have expansion on many of these choices, but they were not made until after the data had been properly split to ensure no leakage (beyond our cursory examination of the data). As such, they will come after later once this split has been made.
 
 ```{python}
 # Reading in the raw data into a dataframe
@@ -106,6 +106,103 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 print(X_train.shape, X_test.shape)
 print(y_train.mean().round(4), y_test.mean().round(4))
+```
+
+Some guiding visualizations from EDA: as mentioned before, these were not generated until after this split was properly made to avoid leakage.
+
+We can visualize the number of fatal floods over time as below - note the time the data spends between \~10% and 30%, consistent with the roughly 18% of floods in the full data set that were recorded as resulting in fatalities. Note as well as the large spike in the modern day, possibly attributable to ease of reporting as a result of the internet or the relative accuracy modern flood assessments could enjoy through modern census methods. Year is a factor we expect then to influence our models.
+
+```{python}
+import matplotlib.pyplot as plt 
+import seaborn as sns 
+import numpy as np
+
+sns.set_theme(style="whitegrid", context="notebook", font_scale=1.7)
+PALETTE = {"Non-Fatal": "#4C72B0", "Fatal": "#DD8452"}
+
+train_df = X_train.assign(Fatal=y_train)
+train_df["Outcome"] = train_df["Fatal"].map({0: "Non-Fatal", 1: "Fatal"})
+
+yearly = (
+    train_df.groupby("Year")["Fatal"]
+    .mean()
+    .mul(100)
+    .reset_index(name="Fatality Rate (%)")
+)
+
+fig, ax = plt.subplots(figsize=(12, 6))
+ax.plot(
+    yearly["Year"],
+    yearly["Fatality Rate (%)"],
+    color=PALETTE["Fatal"],
+    linewidth=2,
+)
+
+ax.set_xlabel("Year")
+ax.set_ylabel("Fatality Rate (%)")
+ax.set_ylim(0, 105)
+ax.set_title("Annual Flood Fatality Rate Over Time (1900–2025, Training Set)")
+plt.tight_layout()
+plt.show()
+```
+
+Geography is a factor we expect to play an important role as well - some countries could be more likely to flood for a number of reasons, be they natural (like climate leading to more heavy rainfall) or human-caused (lack of infrastructure/infrastructure failure stemming from wealth inequality, poor record keeping). Regardless of the reasons, we can see below, some countries have more flood events on record versus others. Due to the size of many of these countries (e.g. Columbia, which spans over 20 degrees of latitude), its possible that latitude and longitude could play part in a model even within a single country - hence their remaining as features even when they may seem redundant alongside country.
+
+```{python}
+top_10_names = train_df["Country"].value_counts().head(10).index
+
+country_counts = (
+    train_df[train_df["Country"].isin(top_10_names)]
+    .groupby(["Country", "Outcome"])
+    .size()
+    .unstack(fill_value=0)
+    .loc[top_10_names[::-1]]  
+)
+
+fig, ax = plt.subplots(figsize=(15, 10))
+country_counts[["Non-Fatal", "Fatal"]].plot(
+    kind="barh",
+    stacked=True,
+    color=[PALETTE["Non-Fatal"], PALETTE["Fatal"]],
+    ax=ax,
+)
+
+ax.set_xlabel("Number of Recorded Flood Events")
+ax.set_ylabel("Country")
+ax.set_title("Top 10 Countries by Flood Event Count and Outcome (Training Set)")
+ax.legend(title="Flood Outcome")
+plt.tight_layout()
+plt.show()
+```
+
+Lastly, people affected and people injured were predicted from the outset to play an important role. Note the visualization below to be in log scale on the y-axis - this was necessary to account for the huge variation in fatalities that was present across the data. We can see even on the log scale, however, almost all floods that injured somebody resulted in fatalities - but many floods that just affected people *didn't* result in fatalities.
+
+```{python}
+fig, axes = plt.subplots(1, 2, figsize=(15, 8))
+
+for ax, col, ylabel in [
+    (axes[0], "Affected", "People Affected (log10(count + 1))"),
+    (axes[1], "Injured", "People Injured (log10(count + 1))"),
+]:
+    plot_data = train_df[[col, "Outcome"]].dropna().copy()
+    plot_data["log_val"] = np.log10(plot_data[col] + 1)
+    sns.boxplot(
+        data=plot_data,
+        x="Outcome",
+        y="log_val",
+        hue="Outcome",
+        palette=PALETTE,
+        legend=False,
+        fliersize=2,
+        ax=ax,
+    )
+    ax.set_xlabel("Flood Outcome")
+    ax.set_ylabel(ylabel)
+    ax.set_title(f"{col} by Flood Outcome")
+
+fig.suptitle("Reported Human Impact by Flood Fatality Outcome (Training Set)", y=1.02)
+plt.tight_layout()
+plt.show()
 ```
 
 Our preprocesser is constructed as per the numeric and categorical features mentioned before. A column transformer is assembled, with a pipeline utilizing median imputation and scaling of numeric features as well as a pipeline using OneHotEncoder for the country columns, imputing by most frequent.
@@ -161,7 +258,7 @@ cv_results
 
 We can see that the decision tree classifier preformed better in both recall and F1 compared to the logistic regression. As such, we will proceed with that model and work to optimize hyperparameters for it.
 
-Because of the limited computing power available to us and the potential scale of the parameter space, we utilize a randomized search with 10 iterations chosen randomly from a spread of max depths and leaf counts, as seen below. We choose going forward to score the model utilizing just f1 - we would not want the model to overfit the data and maximize recall by inflating the number of floods predicted 'fatal.' As pursuant to the golden rule, no test data is touched during this process.
+Because of the limited computing power available to us and the potential scale of the parameter space, we utilize a randomized search with 10 iterations chosen randomly from a spread of max depths and leaf counts, as seen below. We choose going forward to score the model utilizing just F1 - we would not want the model to overfit the data and maximize recall by inflating the number of floods predicted 'fatal.' As pursuant to the golden rule, no test data is touched during this process.
 
 ```{python}
 dt_pipe = make_pipeline(
@@ -188,45 +285,62 @@ From configurations trialed in our search, we find the optimal result to be with
 We can now utilized our set-aside test data and do a final evaluation of the model.
 
 ```{python}
+from sklearn.metrics import ConfusionMatrixDisplay
 
-```
+y_pred = best_model.predict(X_test)
 
-Some initial notes: we can visualize the number of fatal floods over time as below - note the time the data spends between \~10% and 30%, consistent with the roughly 18% of floods in the full data set that were recorded as resulting in fatalities. Note as well as the large spike in the modern day, possibly attributable to ease of reporting as a result of the internet or the relative accuracy modern flood assessments could enjoy through modern census methods.
+test_metrics = pd.Series({
+    "f1": f1_score(y_test, y_pred),
+    "recall": recall_score(y_test, y_pred),
+}).round(4)
 
-```{python}
-import matplotlib.pyplot as plt 
-import seaborn as sns 
-
-train_df = X_train.assign(Fatal=y_train)
-train_df["Outcome"] = train_df["Fatal"].map({0: "Non-Fatal", 1: "Fatal"})
-
-yearly = (
-    train_df.groupby("Year")["Fatal"]
-    .mean()
-    .mul(100)
-    .reset_index(name="Fatality Rate (%)")
+cm = pd.DataFrame(
+    confusion_matrix(y_test, y_pred),
+    index=["Actual Non-Fatal", "Actual Fatal"],
+    columns=["Pred Non-Fatal", "Pred Fatal"],
 )
 
-fig, ax = plt.subplots(figsize=(12, 6))
-ax.plot(
-    yearly["Year"],
-    yearly["Fatality Rate (%)"],
-    color=PALETTE["Fatal"],
-    linewidth=2,
-)
+ConfusionMatrixDisplay(
+    confusion_matrix=cm.to_numpy(),
+    display_labels=["Non-Fatal", "Fatal"]
+).plot(cmap="Blues", values_format=",d")
 
-ax.set_xlabel("Year")
-ax.set_ylabel("Fatality Rate (%)")
-ax.set_ylim(0, 105)
-ax.set_title("Annual Flood Fatality Rate Over Time (1900–2025, Training Set)")
-plt.tight_layout()
-plt.show()
+test_accuracy = best_model.score(X_test, y_test)
+
+score_comparison = pd.DataFrame({
+    "Validation F1": [search.best_score_],
+    "Test F1": [test_metrics["f1"]],
+    "Test Accuracy": [test_accuracy],
+}, index=["Decision Tree"]).round(4)
+
+score_comparison
 ```
+
+Though accuracy was not a metric by which we scored in our random search, it can be recovered via the values in the confusion matrix.
 
 # Discussion
 
-## \[Discussion placeholder\]
+While it wasn't a primary metric we scored by while developing the model, we can see that our model ended with an accuracy of 87.86%, am improvement over the baseline 83.3%. This gain was achieved alongside our test F1 score of 0.6633 (compared again to the baseline's 0). Even more notably, the gap between our validation F1 and test F1 is actually an increase of 0.0095 between the two, indicating that the behaviors the model learned were generalizable without overfitting. Overall our model provided a strong improvement over the baseline, and this is what we'd expected to find. Our EDA gave us several promising features to utilize as predictors and the model was able to capitalize off of them to produce a decision tree that generalized well to the test data. There are, however, limitations on our results.
+
+For starters, as seen in the confusion matrix, the model predicts non-fatal 1,351 times when the result was actually fatal. This is an unfortunate result of the trade-off for f1 over recall once we had settled on the decision tree. We wouldn't want a model that inflates false positives for the purpose of maxing out recall as it could waste disaster response efforts where they aren't needed, but our model is going to miss fatal predictions as a result, which could also jeopardize lives as the tradeoff. This limits the model's functionality as a sole disaster-response predictor.
+
+Additionally, the data itself has limitations as a result of it being a conglomeration of many sources with many entries. As seen below, 1,657 of our initial rows has NA as the entry for our target of fatalities and needed to be removed, which represents \~1.21% of the original data. Other potentially useful indicators (like homes destroyed or damage in \$USD) were only recorded in some sources and thus not prevalent enough in the data to be usable for our purposes. Lastly, the team identified that poor records across sources meant that 8,788 floods in the database were potential duplicates (located within `Potential_Duplicate_Events.csv` in the original report) and could result in the model weighing an event double another by virtue of their being two entries for it.
+
+```{python}
+df = pd.read_excel("../data/raw/Aggregated_Flood_Data.xlsx", sheet_name="Aggregated")
+print(f'Number of entries with NA as fatalities: {df["Fatalities"].isna().sum()}')
+print(f'Percent of entries with NA as fatalities: {100*df["Fatalities"].isna().sum()/len(df):.2f}')
+```
+
+Though our model has limitations, it could still be useful in disaster response planning and resource allocation. Though it could be argued our threshold of 'any' fatalities might overstate the danger of a given flood in the face of other disasters that need tending to (like annual wildfires or earthquakes), and especially so in the face of some of the maximums present in the data, in the modern world the loss of life from events like this is so preventable that it doesn't take much for an event like this to be classified as a 'disaster.' Public Safety Canada, for example, classifies a disaster as any event that, among other qualifying criteria,, kills 10 or more or affects/injures/evacuates 100 or more people.^2^ The Global Disatser Alert and Coordination System classifies a flood as Green Alert for any and all death or displacement, and Orange Alert (which calls for potential international aid) as \>100 dead or \>80,000 displaced.^3^ **\<---- this part needs citation, I'm pretty sure its correct but the site was down at the time i tried to look.**
+
+Our modeling is not unique in the field of data science, either - in April of 2026, the Institute of Electrical and Electronics Engineers published a study that suggested present flood-response tactics are inflexible and allocate resources inefficiently (two assertions that our model hopes to tackle as well). Their proposed system titled FloodMod utilizes a Long-Short-Term-Memory Neural Network, alongside with operator oversight, to handle incoming requests from both disaster response coordinators and individuals who are requesting assistance via a web connection to the service (likely through cell phones or any other way they have to access the internet). The system seeks to streamline operator workload and first-responder efforts by doing much of the heavy computation work of generating optimized plans of response as disaster statistics and help requests come in to the system.^4^ Even this is not the extent of this type of research - this paper alone is built on the back of many other cited papers utilizing LLMs for disaster response planning, earthquake risk severity, and even more impossible-for-a-human topics like interpreting disaster updates from the mass amounts of data posted to social media during a disaster.
+
+In conclusion, our decision tree model provided a substantial improvement over our baseline and the linear regression it beat out, achieving a test f1 of 0.6633 and a test accuracy of 87.86%. Despite the limitations present within the data and within our model, disaster response planning through predictive modeling is a growing field, and we can expect more research on this topic to be forthcoming in the age of AI. We hope that our model, and others like it, can work to streamline disaster response coordination and work to save lives.
 
 # References
 
-## \[References placeholder\]
+1.  Magers, B.M., Najibi, N., Troy, T.J., Arumugam, S., Jutla, A.S., Allaire, M., Lima, C., Kim, S., Hwang, J., Bae, K., Barth, N.A, Drakes, O., Archfield, S.A., and Devineni, N., 2026, The Global Flood Impacts Database (GFID): A globally aggregated and geocoded flood disaster impacts database: U.S. Geological Survey data release, <https://doi.org/10.5066/P135ARGI.>
+2.  Government of Canada. (2015, October 16). Canadian disaster database - data criteria. Public Safety Canada. <https://www.publicsafety.gc.ca/cnt/rsrcs/cndn-dsstr-dtbs/dt-crtr-en.aspx>
+3.  Flood Models. Global Disaster Awareness and Coordination System. (n.d.). <https://data.gdacs.org/Knowledge/models_FL.aspx>
+4.  T. I, T. R and J. E. K, "Flood Mod: A Flood Based Emergency Response System with Multi Model LLM Pipeline for Emergency Call Triage & Resource Allocation," *2026 Fourth International Conference on Augmented Intelligence and Sustainable Systems (ICAISS)*, Trichy, India, 2026, pp. 1858-1863, doi: 10.1109/ICAISS68683.2026.11526071.
