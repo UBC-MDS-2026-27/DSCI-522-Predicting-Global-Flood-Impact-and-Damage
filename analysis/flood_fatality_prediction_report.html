@@ -76,7 +76,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="flood_fatality_prediction_report_files/libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="flood_fatality_prediction_report_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="flood_fatality_prediction_report_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="flood_fatality_prediction_report_files/libs/bootstrap/bootstrap-215b371544c282197b31c8aa00ce3677.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="flood_fatality_prediction_report_files/libs/bootstrap/bootstrap-917079515d91bccb85b543faf8aa8bb6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
@@ -121,7 +121,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div id="17ac741c" class="cell" data-execution_count="1">
+<div id="42996e5f" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> urllib.request <span class="im">import</span> urlretrieve</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os </span>
@@ -145,7 +145,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="data" class="level2">
 <h2 class="anchored" data-anchor-id="data">Data</h2>
 <p>This project utilizes an aggregated dataset of global floods published by the U.S. Geological Survey (USGS) and written by <em>Magers et al.</em><sup>1</sup> The publication as well as the data can be found <a href="https://www.sciencebase.gov/catalog/item/69e7e00db66b0164d0f7302d">here</a>. The code below downloads the full data set, <code>Aggregated_Flood_Data.xlsx</code> , into the raw data folder. Because of the relatively small file size, the data will also already be present within the repository, but the function <code>data_download_xlsx</code> allows for it to be downloaded to any targeted repository if needed. Sheets within the excel file give the sources as originally compiled, while the sheet <code>Aggregated</code> gives the full data set as compiled and cleaned by the authors of the paper.</p>
-<div id="42fd45c3" class="cell" data-execution_count="2">
+<div id="5502e0bf" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to download raw data folder and save it locally.</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> data_download_xlsx(url, save_dir, name):</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Download an original .xlsx file and save it locally.</span></span>
@@ -160,7 +160,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> os.path.exists(save_target):</span>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        urlretrieve(url, save_target)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="80254449" class="cell" data-execution_count="3">
+<div id="8b945ea1" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Saving raw .xlsx file locally</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>data_url<span class="op">=</span><span class="st">"https://www.sciencebase.gov/catalog/file/get/69e7e00db66b0164d0f7302d?f=__disk__c3</span><span class="sc">%2F</span><span class="st">44</span><span class="sc">%2F</span><span class="st">d6</span><span class="sc">%2F</span><span class="st">c344d62cc5d115d408726fb52d9d459c6e1b5ed1"</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>data_dir <span class="op">=</span> <span class="st">"../data/raw"</span></span>
@@ -175,7 +175,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Categorical Features: Country</p></li>
 </ul>
 <p>See the code below for the methodology as well as the corresponding column names within the data. Visualizations within the analysis section below will have expansion on many of these choices, but the visualizations were not made until after the data had been properly split to ensure no leakage (beyond our cursory examination of the data, which revealed these columns as the ones with the most complete data). As such, they will appear later once this split has been made.</p>
-<div id="f49d3d09" class="cell" data-execution_count="4">
+<div id="e0336148" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reading in the raw data into a dataframe</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_excel(<span class="st">"../data/raw/Aggregated_Flood_Data.xlsx"</span>, sheet_name<span class="op">=</span><span class="st">"Aggregated"</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -190,7 +190,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df[numeric_features <span class="op">+</span> categorical_features]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Exploratory data analysis revealed that ~82.8% of the floods on record were recorded as having no fatalities. As such, a classifier seemed prudent as our choice of model. We create the target column as a binary: 1 if the flood resulted in fatalities, 0 otherwise. We then save the dataset to the processed data directory.</p>
-<div id="70f8d7ee" class="cell" data-execution_count="5">
+<div id="ea866064" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> (df[<span class="st">"Fatalities"</span>] <span class="op">&gt;=</span> <span class="dv">1</span>).astype(<span class="bu">int</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>X.shape, y.value_counts(normalize<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -200,7 +200,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>cleaned_df.to_csv(<span class="st">"../data/processed/flood_data_cleaned.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>pd.concat([X,y], axis<span class="op">=</span><span class="dv">1</span>).head() <span class="co">#show a header of what the data looks like</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="21">
+<div class="cell-output cell-output-display" data-execution_count="5">
 <div>
 
 
@@ -278,7 +278,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="analysis" class="level2">
 <h2 class="anchored" data-anchor-id="analysis">Analysis</h2>
 <p>To avoid leakage, we now split our data, with 20% reserved for testing. For reproducibility, we will set a constant random state of <code>522</code> every time randomity is a factor.</p>
-<div id="cf8ef3e3" class="cell" data-execution_count="6">
+<div id="c340ef9d" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    X, y, test_size<span class="op">=</span><span class="fl">0.2</span>, stratify<span class="op">=</span>y, random_state<span class="op">=</span><span class="dv">522</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>)</span>
@@ -301,7 +301,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Max"</span>: X_train[numeric_features].<span class="bu">max</span>().<span class="bu">round</span>(<span class="dv">2</span>),</span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>})</span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>numeric_summary</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="23">
+<div class="cell-output cell-output-display" data-execution_count="7">
 <div>
 
 
@@ -372,7 +372,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Some guiding visualizations from EDA: as mentioned before, these were not generated until after this split was properly made to avoid leakage.</p>
 <p>We can visualize the number of fatal floods over time in Figure 1 - note the time the data spends between ~10% and 30%, consistent with the roughly 17.2% of floods in the full data set that were recorded as resulting in fatalities. Note as well as the large spike in the modern day, possibly attributable to ease of reporting as a result of the internet or the relative accuracy modern flood assessments could enjoy through modern census methods. Year is a factor we expect then to influence our models.</p>
-<div id="2f1064ec" class="cell" data-execution_count="8">
+<div id="98f82001" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt </span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns </span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -414,7 +414,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Geography is a factor we expect to play an important role as well - some countries could be more likely to flood for a number of reasons, be they natural (like climate leading to more heavy rainfall) or human-caused (lack of infrastructure/infrastructure failure stemming from wealth inequality, poor record keeping). Regardless of the reasons, as shown in Figure 2, some countries have more flood events on record versus others. Due to the size of many of these countries (e.g.&nbsp;Colombia, which spans over 20 degrees of latitude), it is possible that latitude and longitude could play part in a model even within a single country - hence their remaining as features as well even when they may seem redundant alongside the country data.</p>
-<div id="0542c65a" class="cell" data-execution_count="9">
+<div id="8ba97957" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>top_10_names <span class="op">=</span> train_df[<span class="st">"Country"</span>].value_counts().head(<span class="dv">10</span>).index</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>country_counts <span class="op">=</span> (</span>
@@ -442,14 +442,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="flood_fatality_prediction_report_files/figure-html/cell-10-output-1.png" width="1397" height="920" class="figure-img"></p>
+<p><img src="flood_fatality_prediction_report_files/figure-html/cell-10-output-1.png" width="1398" height="920" class="figure-img"></p>
 <figcaption>Figure 2: Top 10 countries by recorded flood event count and fatality outcome in the training set.</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p>Lastly, people affected and people injured were predicted from the outset to play an important role. Note Figure 3 below was modified to be in log scale on the y-axis - this was necessary to account for the huge variation in affected and injured counts that were present across the data. We can see even on the log scale, however, almost all floods that injured somebody resulted in fatalities - but many floods that just <em>affected</em> people didn’t result in fatalities.</p>
-<div id="9af714c6" class="cell" data-execution_count="10">
+<div id="ce5e0961" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">8</span>))</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, col, ylabel <span class="kw">in</span> [</span>
@@ -485,7 +485,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Our preprocessor is constructed as per the numeric and categorical features mentioned before. A column transformer is assembled, with a pipeline utilizing median imputation and scaling for numeric features as well as a pipeline using one-hot encoding for the country columns, imputing by most frequent.</p>
-<div id="9a3aee94" class="cell" data-execution_count="11">
+<div id="dcac722b" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>preprocessor <span class="op">=</span> make_column_transformer(</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    (make_pipeline(SimpleImputer(strategy<span class="op">=</span><span class="st">"median"</span>), StandardScaler()), numeric_features),</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    (make_pipeline(SimpleImputer(strategy<span class="op">=</span><span class="st">"most_frequent"</span>), OneHotEncoder(handle_unknown<span class="op">=</span><span class="st">"ignore"</span>)), categorical_features),</span>
@@ -495,7 +495,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>X_test_proc <span class="op">=</span> preprocessor.transform(X_test)</span>
 <span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>X_train_proc.shape, X_test_proc.shape</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="27">
+<div class="cell-output cell-output-display" data-execution_count="11">
 <pre><code>((103776, 376), (25945, 376))</code></pre>
 </div>
 </div>
@@ -528,7 +528,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>cv_results <span class="op">=</span> pd.DataFrame(results).T.sort_values(<span class="st">"f1"</span>, ascending<span class="op">=</span><span class="va">False</span>).<span class="bu">round</span>(<span class="dv">4</span>)</span>
 <span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>cv_results</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="28">
+<div class="cell-output cell-output-display" data-execution_count="12">
 <div>
 
 
@@ -544,13 +544,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">Decision Tree</th>
-<td>0.6080</td>
+<td>0.6078</td>
 <td>0.7055</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">Logistic Regression</th>
-<td>0.5552</td>
-<td>0.6952</td>
+<td>0.5554</td>
+<td>0.6956</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">Dummy</th>
@@ -566,7 +566,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>As shown in Table 2, the decision tree classifier performed better in both recall and F1 compared to the logistic regression. As such, we will proceed with that model and work to optimize hyperparameters for it.</p>
 <p>Because of the limited computing power available to us and the potential scale of the parameter space, we utilize a randomized search with 10 iterations chosen randomly from a spread of max depths and leaf counts, as seen below. We choose going forward to score the model utilizing just F1 - we would not want the model to overfit the data and maximize recall by inflating the number of floods predicted ‘fatal,’ as such model behavior could result in wasted first responder efforts. Though recall played an important role in model selection, F1 will be our scoring metric going forward.</p>
 <p>Following the golden rule, no test data is touched during this process.</p>
-<div id="b7156d10" class="cell" data-execution_count="13">
+<div id="c0100fb4" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>dt_pipe <span class="op">=</span> make_pipeline(</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    preprocessor,</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    DecisionTreeClassifier(class_weight<span class="op">=</span><span class="st">"balanced"</span>, random_state<span class="op">=</span><span class="dv">522</span>),</span>
@@ -582,10 +582,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>best_model <span class="op">=</span> search.best_estimator_</span>
 <span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>search.best_params_, <span class="bu">round</span>(search.best_score_, <span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="29">
+<div class="cell-output cell-output-display" data-execution_count="13">
 <pre><code>({'decisiontreeclassifier__min_samples_leaf': 5,
   'decisiontreeclassifier__max_depth': 20},
- np.float64(0.6127))</code></pre>
+ np.float64(0.6121))</code></pre>
 </div>
 </div>
 <p>From configurations trialed in our search, we find the optimal result to be with minimum samples per leaf at 5, and max depth at 20, giving a validation F1 score of 0.6121. We are now prepared to test our model on the test data set and proceed with analysis.</p>
@@ -594,7 +594,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="results" class="level1">
 <h1>Results</h1>
 <p>We now utilize the set-aside test data and do a final evaluation of the model.</p>
-<div id="3addf4b9" class="cell" data-execution_count="14">
+<div id="fa25ec5b" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> ConfusionMatrixDisplay</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> best_model.predict(X_test)</span>
@@ -638,7 +638,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>}, index<span class="op">=</span>[<span class="st">"Decision Tree"</span>]).<span class="bu">round</span>(<span class="dv">4</span>)</span>
 <span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>score_comparison</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="31">
+<div class="cell-output cell-output-display" data-execution_count="15">
 <div>
 
 
@@ -655,9 +655,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">Decision Tree</th>
-<td>0.6127</td>
-<td>0.6117</td>
-<td>0.8416</td>
+<td>0.6121</td>
+<td>0.6114</td>
+<td>0.8413</td>
 </tr>
 </tbody>
 </table>
@@ -672,7 +672,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>While it wasn’t a primary metric we scored by while developing the model, we can see that our model ended with an accuracy of 84.13%, an improvement over the baseline 82.8%. This gain was achieved alongside our test F1 score of 0.6114 (compared again to the baseline’s 0). Even more notably, the gap between our validation F1 and test F1 is only a decrease of 0.0007 between the two, indicating that the behaviors the model learned were generalizable to our test data without overfitting. Overall our model provided a strong improvement over the baseline, and this is what we’d expected to find. Our EDA gave us several promising features to utilize as predictors and the model was able to capitalize off of them to produce a decision tree that generalized well to the test data. There are, however, limitations on our results.</p>
 <p>For starters, as seen in the confusion matrix, the model predicts non-fatal 1,216 times when the result was actually fatal. This is an unfortunate result of the aforementioned trade-off for F1 over recall once we had settled on the decision tree. We wouldn’t want a model that inflates false positives for the purpose of maxing out recall as it could waste disaster response efforts where they aren’t needed, but our model is going to miss fatal predictions as a result, which could also jeopardize lives as the trade off. This limits the model’s functionality as a sole disaster-response predictor.</p>
 <p>Additionally, the data itself has limitations as a result of it being a conglomeration of many sources with many entries. As seen below, 1,657 of our initial rows had NA as the entry for our target of fatalities and needed to be removed, which represents ~1.21% of the original data. Other potentially useful indicators (like homes destroyed or damage in $USD) were only recorded in some sources and thus not prevalent enough in the data to be usable for our purposes. Lastly, the authors of the paper identified that poor records across sources meant that 8,788 floods in the database were potential duplicates (located within <code>Potential_Duplicate_Events.csv</code> in the original report) and could result in the model double-counting certain events by virtue of their being two entries for the same flood.</p>
-<div id="11c53c54" class="cell" data-execution_count="16">
+<div id="af312100" class="cell" data-execution_count="16">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Number of entries with NA as fatalities: </span><span class="sc">{</span>na_count<span class="sc">}</span><span class="ss">'</span>)</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Percent of entries with NA as fatalities: </span><span class="sc">{</span>na_prop<span class="sc">:.2f}</span><span class="ss">'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
