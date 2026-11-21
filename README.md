@@ -7,7 +7,7 @@
 - Everett Rendon
 
 ## Project Summary:
-Could we predict whether a flood causes at least one death based on its location,duration and other affection to human? Our team compared several classification model and choosed a tuned decision tree model which perform best. It achieved an F1 score of 0.6633 and identified about 70% of fatal events on test data set. This project suggested that we have reason to believe the recorded event characteristics contain useful information about fatality. 
+Could we predict whether a flood causes at least one death based on its location and other affection to human? Our team compared several classification model and choosed a tuned decision tree model which perform best. It achieved an F1 score of 0.6633 and identified about 70% of fatal events on test data set. This project suggested that we have reason to believe the recorded event characteristics contain useful information about fatality. 
 
 ## How to run the analysis:
 Clone the repository and enter the project directory:
