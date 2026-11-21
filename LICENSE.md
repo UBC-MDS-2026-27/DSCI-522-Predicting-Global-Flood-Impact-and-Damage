@@ -14,7 +14,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 ## Analysis report
 Copyright (c) 2026 Niroshan Benjamin, Fang Fang, Abdullah Naeem, Everett Rendon
 
-The analysis report is made available under the Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0). 
+The analysis report is made available under the Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-ND 4.0). 
 
 Attribution-NonCommercial-NoDerivatives 4.0 International
 

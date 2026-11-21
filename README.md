@@ -9,7 +9,7 @@
 
 ## Project Summary:
 
-Could we predict whether a flood causes at least one death based on its location and other characteristics related to impact? Our team compared several classification models and chose a tuned decision tree model that performed best and generalized well on the test data set. It achieved an test F1 score of 0.6117 and a test accuracy of 84.2%. From thsi model, we were able to identify about 73% of fatal events on the test data set. This project suggested that we have reason to believe the recorded event characteristics contain useful information about fatality.
+Could we predict whether a flood causes at least one death based on its location and other characteristics related to impact? Our team compared several classification models and chose a tuned decision tree model that performed best and generalized well on the test data set. It achieved an test F1 score of 0.6114 and a test accuracy of 84.13%. From thsi model, we were able to identify about 73% of fatal events on the test data set. This project suggested that we have reason to believe the recorded event characteristics contain useful information about fatality.
 
 ## How to run the analysis:
 
@@ -45,7 +45,7 @@ Open `analysis/flood_fatality_prediction_report.html` to read the rendered repor
 The software code contained within this repository is licensed under the MIT license. The report is licensed under the CC BY-NC-ND 4.0. See [LICENSE.md](LICENSE.md) for the licenses covering the project code and report.
 
 ## AI use statement:
-Fang Fang: I used to the Chatgpt to teach me how I can insert a link to other file in the repository.
+Fang Fang: I used Chatgpt to teach me how I can insert a link to other file in the repository.
 Example prompts: "how I can insert a link to other file in the repository?"
 
 
