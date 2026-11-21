@@ -48,14 +48,6 @@ The software code contained within this repository is licensed under the MIT lic
 
 Everett Rendon: The LLM I utilized to assist with my portion of the report was ChatGPT. I utilized it to generate some of the trivial plotting code in the Discussion section of the report and for some instructions on managing uv, such as a bugfix with pyproject.toml in which a folder was being generated under the assumption our project was to contain exportable functions, which it did not. It also acted as a spellcheck and proofreader after I had completed the methods, analysis, and discussion sections where it caught some small typos and old information that needed updating as our report structure changed.
 
-Abdullah Naeem: In this project, I used Kiro and Google Antigravity (Claude and Gemini) to proofread and refine my portion of the exploratory data analysis and visualizations. I used them to get ideas on what visualizations might help with understanding the data based on the EDA process. I also used them to help with proofreading my writing for my section of the report. No custom instructions or system files were used from my end. 
-
-Example Prompts: 
-
-- "Check over my data visualizations and EDA to see if the chosen visualizations are relevant to the investigative question and that they follow the milestone criteria."
-
-- "Can you proofread my writing for my section of the report and check for typos, grammatical errors, and clarity?"
-
 ## Link to the rendered report:
 
 [View the report](analysis/flood_fatality_prediction_report.html)
