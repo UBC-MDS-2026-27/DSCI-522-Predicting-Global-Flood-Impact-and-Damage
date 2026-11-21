@@ -330,10 +330,17 @@ cm = pd.DataFrame(
     columns=["Pred Non-Fatal", "Pred Fatal"],
 )
 
-ConfusionMatrixDisplay(
+disp = ConfusionMatrixDisplay(
     confusion_matrix=cm.to_numpy(),
     display_labels=["Non-Fatal", "Fatal"]
 ).plot(cmap="Blues", values_format=",d")
+
+disp.figure_.text(
+    0.5, 0.02,
+    "Figure 1: Confusion matrix for the decision tree classifier on test data.",
+    ha="center",
+    fontsize=10
+)
 
 test_accuracy = best_model.score(X_test, y_test)
 
