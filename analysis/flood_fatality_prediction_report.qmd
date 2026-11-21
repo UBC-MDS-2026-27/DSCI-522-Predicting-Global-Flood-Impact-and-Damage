@@ -72,10 +72,6 @@ df = pd.read_excel("../data/raw/Aggregated_Flood_Data.xlsx", sheet_name="Aggrega
 na_count = df["Fatalities"].isna().sum() #count of missing target rows, used later in discussion
 na_prop = 100*df["Fatalities"].isna().sum()/len(df)
 
-start = pd.to_datetime(df["Start Date"], errors="coerce")
-end = pd.to_datetime(df["End Date"], errors="coerce")
-df["Duration"] = (end - start).dt.days.clip(lower=0)
-
 df = df[df["Year"].between(1900, 2026)].dropna(subset=["Fatalities"])
 
 numeric_features = ["Year", "Lat", "Lon", "Affected", "Injured"]
@@ -331,7 +327,6 @@ For starters, as seen in the confusion matrix, the model predicts non-fatal 1,21
 Additionally, the data itself has limitations as a result of it being a conglomeration of many sources with many entries. As seen below, 1,657 of our initial rows had NA as the entry for our target of fatalities and needed to be removed, which represents \~1.21% of the original data. Other potentially useful indicators (like homes destroyed or damage in \$USD) were only recorded in some sources and thus not prevalent enough in the data to be usable for our purposes. Lastly, the authors of the paper identified that poor records across sources meant that 8,788 floods in the database were potential duplicates (located within `Potential_Duplicate_Events.csv` in the original report) and could result in the model weighing certain event double by virtue of their being two entries for the same flood.
 
 ```{python}
-df = pd.read_excel("../data/raw/Aggregated_Flood_Data.xlsx", sheet_name="Aggregated")
 print(f'Number of entries with NA as fatalities: {na_count}')
 print(f'Percent of entries with NA as fatalities: {na_prop:.2f}')
 ```
@@ -340,7 +335,7 @@ Despite these limitations, our model could still be useful in disaster response 
 
 Our modeling is not unique in the field of data science, either - in April of 2026, the Institute of Electrical and Electronics Engineers published a study that suggested present flood-response tactics are inflexible and allocate resources inefficiently (two assertions that our model hopes to tackle as well). Their proposed system titled FloodMod utilizes a Long-Short-Term-Memory Neural Network, alongside operator oversight, to handle incoming requests from both disaster response coordinators and individuals who are requesting assistance via a web connection to the service (likely through cell phones or any other way they have to access the internet). The system seeks to streamline operator workload and first-responder efforts by doing much of the heavy computation work of generating optimized plans for response as disaster statistics and help requests come in to the system.^4^ Even this is not the extent of this type of research - this paper alone is built on the back of many other cited papers utilizing LLMs for disaster response planning, earthquake risk severity, and even more impossible-for-a-human work like interpreting disaster updates from the mass amounts of data posted to social media during such a disaster.
 
-In conclusion, our decision tree model provided a substantial improvement over our baseline and the logistic regression it beat out, achieving a test f1 score of 0.6633 and a test accuracy of 87.86%. Despite the limitations present within the data and within our model, disaster response planning through predictive modeling is a growing field, and we can expect more research on this topic to be forthcoming in the age of AI. We hope that our model, and others like it, can work to streamline disaster response coordination and work to save lives.
+In conclusion, our decision tree model provided a substantial improvement over our baseline and the logistic regression it beat out, achieving a test f1 score of 0.6117 and a test accuracy of 84.16%. Despite the limitations present within the data and within our model, disaster response planning through predictive modeling is a growing field, and we can expect more research on this topic to be forthcoming in the age of AI. We hope that our model, and others like it, can work to streamline disaster response coordination and work to save lives.
 
 # References
 
