@@ -9,7 +9,7 @@
 
 ## Project Summary:
 
-Could we predict whether a flood causes at least one death based on its location and other affection to human? Our team compared several classification model and choosed a tuned decision tree model which perform best. It achieved an F1 score of 0.6633 and identified about 70% of fatal events on test data set. This project suggested that we have reason to believe the recorded event characteristics contain useful information about fatality.
+Could we predict whether a flood causes at least one death based on its location and other characteristics related to impact? Our team compared several classification models and chose a tuned decision tree model that performed best and generalized well on the test data set. It achieved an test F1 score of 0.6117 and a test accuracy of 84.2%. From thsi model, we were able to identify about 73% of fatal events on the test data set. This project suggested that we have reason to believe the recorded event characteristics contain useful information about fatality.
 
 ## How to run the analysis:
 
@@ -37,8 +37,8 @@ Open `analysis/flood_fatality_prediction_report.html` to read the rendered repor
 ## Dependencies:
 
 - Python (required version in [pyproject.toml](pyproject.toml))
-- uv for installing the python environment(version 0.12 or higher)
-- quarto for rendering report(version 1.10 or higher) Python packages needed are listed in [pyproject.toml](pyproject.toml). The environment is locked in [uv.lock](uv.lock).
+- uv for installing the python environment (version 0.12 or higher)
+- quarto for rendering report (version 1.10 or higher) Python packages needed are listed in [pyproject.toml](pyproject.toml). The environment is locked in [uv.lock](uv.lock).
 
 ## Licenses:
 
