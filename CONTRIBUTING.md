@@ -3,7 +3,7 @@
 We welcome feedback, bug reports, suggestions and contributions to this data analysis project. Please follow our [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Report a Bug or Suggest a Change
-Create an associated issue in this repository. For a bug, illustrate the bug by describe how to reproduce it including at least one a error message. For a suggestion, explain what you want to change and the reason.
+Create an associated issue in this repository. For a bug, illustrate the bug by describing how to reproduce it including at least one error message. For a suggestion, explain what you want to change and the reason.
 
 ## Set up environment
 clone the repository by 
@@ -16,7 +16,7 @@ uv sync
 The detailed instructions to run the analysis lies in [README](README.md).
 
 ## Make a Change
-Please make changes after create your own banch:
+Please make changes after creating your own banch:
 ```bash
 git switch -c your-branch-name
 ```

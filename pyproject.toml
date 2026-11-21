@@ -1,7 +1,7 @@
 [project]
 name = "dsci-522-predicting-global-flood-impact-and-damage"
 version = "0.1.0"
-description = "Add your description here"
+description = "Predicting fatalities from global flood events"
 readme = "README.md"
 authors = [
     { name = "efrendon", email = "everettfr@hotmail.com" }

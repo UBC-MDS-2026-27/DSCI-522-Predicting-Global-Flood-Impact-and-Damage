@@ -19,7 +19,7 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 # Summary
 
 In this analysis, we considered how a flood event's geographic, temporal, and severity characteristics can be used to predict
-whether the flood results in at least one fatality. We build a classification model using a tuned decision tree classifier on historical 
+whether the flood results in at least one fatality. We built a classification model using a tuned decision tree classifier on historical 
 flood records which generalized best to unseen data, achieving an F1 score of 0.6117 and approximately 73% recall on fatal flood events. This
 result significantly outperformed our baseline dummy model F1 score of 0. Results from our analysis matter during real emergencies, as information such as 
 flood location, timing, and injuries are known prior to final death tolls being confirmed. As a result, a predictive model could assist first responders and 
@@ -29,13 +29,13 @@ missingness count in flood duration. Furthermore, potential duplicates in flood 
 
 # Introduction
 
-Flooding is one of the most frequent and commonly occuring natural disasters worldwide that displaces millions of people every year and causes severe loss of life, especially when emergency response services are delayed. 
+Flooding is one of the most frequent and commonly occurring natural disasters worldwide that displaces millions of people every year and causes severe loss of life, especially when emergency response services are delayed. 
 In the aftermath of a flood, impact indicators such as the region affected, the flood's timing, and counts of the injured or affected are often reported before death tolls are confirmed. 
 This makes early risk classification valuable for resource allocation and where to prioritize aid and flag under-reported fatal events. 
 
 To address this problem, our study asks the following investigative question: "Given a flood event's geographic, temporal, and reported impact characteristics, can we predict whether the flood results in at least one fatality?"
 We answered this question by using data published by the U.S. Geological Survey (USGS) that combines four disaster archives into a single aggregated dataset of 136,642 total recorded events. One row in our filtered dataset represents a recorded flood event 
-between 1900 and 2025. We considered a total of 7 predictors that relate to a flood events location, timing, and reported impact. Our target variable is defined as binary, indicating whether the flood resulted in at least one fatality or not. 
+between 1900 and 2025. We considered a total of 6 predictors (Year, Latitude, Longitude, Affected, Injured, Country) that relate to a flood events location, timing, and reported impact. Our target variable is defined as binary, indicating whether the flood resulted in at least one fatality or not. 
 
 # Methods
 
@@ -68,7 +68,7 @@ name="Aggregated_Flood_Data"
 data_download_xlsx(data_url, data_dir, name)
 ```
 
-Despite the improvements the authors made in cleaning the data from the disparate collections seen in the other sheets, more cleaning was necessary prior to our modeling. Steps included the conversion of dates to `pandas` datetime objects, the dropping of rows containing a fatality entry of N/A (given that fatalities are our target, we can do no modeling using such rows), and the dropping of columns with either not enough entries to be usable for our examination or content irrelevant to our examination (such as unique identifiers).
+Despite the improvements the authors made in cleaning the data from the disparate collections seen in the other sheets, more cleaning was necessary prior to our modeling. Steps included the dropping of rows containing a fatality entry of N/A (given that fatalities are our target, we can do no modeling using such rows), and the dropping of columns with either not enough entries to be usable for our examination or content irrelevant to our examination (such as unique identifiers).
 
 Of the columns, the following were kept and categorized as follows:
 
@@ -76,7 +76,7 @@ Of the columns, the following were kept and categorized as follows:
 
 - Categorical Features: Country
 
-See the code below for the methodology as well as the corresponding column names within the data. Visualizations within the analysis section below will have expansion on many of these choices, but the visualizations were not made until after the data had been properly split to ensure no leakage (beyond our cursory examination of the data, which revealed these columns as the ones with the most complete data). As such, they will come after later once this split has been made.
+See the code below for the methodology as well as the corresponding column names within the data. Visualizations within the analysis section below will have expansion on many of these choices, but the visualizations were not made until after the data had been properly split to ensure no leakage (beyond our cursory examination of the data, which revealed these columns as the ones with the most complete data). As such, they will appear later once this split has been made.
 
 ```{python}
 # Reading in the raw data into a dataframe
@@ -120,11 +120,27 @@ print(X_train.shape, X_test.shape)
 print(y_train.mean().round(4), y_test.mean().round(4))
 ```
 
-Some guiding visualizations from EDA: as mentioned before, these were not generated until after this split was properly made to avoid leakage.
-
-We can visualize the number of fatal floods over time as below - note the time the data spends between \~10% and 30%, consistent with the roughly 17.2% of floods in the full data set that were recorded as resulting in fatalities. Note as well as the large spike in the modern day, possibly attributable to ease of reporting as a result of the internet or the relative accuracy modern flood assessments could enjoy through modern census methods. Year is a factor we expect then to influence our models.
+Table 1 summarizes the numeric predictors and their missingness rates in the training set, highlighting the strong right skew in people affected and people injured.
 
 ```{python}
+#| tbl-cap: "Table 1: Summary statistics and missingness for numeric predictors in the training set."
+numeric_summary = pd.DataFrame({
+    "Missing (%)": (X_train[numeric_features].isna().mean() * 100).round(2),
+    "Min": X_train[numeric_features].min().round(2),
+    "Median": X_train[numeric_features].median().round(2),
+    "Mean": X_train[numeric_features].mean().round(2),
+    "95th Percentile": X_train[numeric_features].quantile(0.95).round(2),
+    "Max": X_train[numeric_features].max().round(2),
+})
+numeric_summary
+```
+
+Some guiding visualizations from EDA: as mentioned before, these were not generated until after this split was properly made to avoid leakage.
+
+We can visualize the number of fatal floods over time in Figure 1 - note the time the data spends between \~10% and 30%, consistent with the roughly 17.2% of floods in the full data set that were recorded as resulting in fatalities. Note as well as the large spike in the modern day, possibly attributable to ease of reporting as a result of the internet or the relative accuracy modern flood assessments could enjoy through modern census methods. Year is a factor we expect then to influence our models.
+
+```{python}
+#| fig-cap: "Figure 1: Annual flood fatality rate over time (1900–2025) in the training set."
 import matplotlib.pyplot as plt 
 import seaborn as sns 
 import numpy as np
@@ -158,9 +174,10 @@ plt.tight_layout()
 plt.show()
 ```
 
-Geography is a factor we expect to play an important role as well - some countries could be more likely to flood for a number of reasons, be they natural (like climate leading to more heavy rainfall) or human-caused (lack of infrastructure/infrastructure failure stemming from wealth inequality, poor record keeping). Regardless of the reasons, we can see below that some countries have more flood events on record versus others. Due to the size of many of these countries (e.g. Colombia, which spans over 20 degrees of latitude), its possible that latitude and longitude could play part in a model even within a single country - hence their remaining as features as well even when they may seem redundant alongside the country data.
+Geography is a factor we expect to play an important role as well - some countries could be more likely to flood for a number of reasons, be they natural (like climate leading to more heavy rainfall) or human-caused (lack of infrastructure/infrastructure failure stemming from wealth inequality, poor record keeping). Regardless of the reasons, as shown in Figure 2, some countries have more flood events on record versus others. Due to the size of many of these countries (e.g. Colombia, which spans over 20 degrees of latitude), it is possible that latitude and longitude could play part in a model even within a single country - hence their remaining as features as well even when they may seem redundant alongside the country data.
 
 ```{python}
+#| fig-cap: "Figure 2: Top 10 countries by recorded flood event count and fatality outcome in the training set."
 top_10_names = train_df["Country"].value_counts().head(10).index
 
 country_counts = (
@@ -187,9 +204,10 @@ plt.tight_layout()
 plt.show()
 ```
 
-Lastly, people affected and people injured were predicted from the outset to play an important role. Note the visualization below to be in log scale on the y-axis - this was necessary to account for the huge variation in fatality counts that were present across the data. We can see even on the log scale, however, almost all floods that injured somebody resulted in fatalities - but many floods that just *affected* people didn't result in fatalities.
+Lastly, people affected and people injured were predicted from the outset to play an important role. Note Figure 3 below was modified to be in log scale on the y-axis - this was necessary to account for the huge variation in affected and injured counts that were present across the data. We can see even on the log scale, however, almost all floods that injured somebody resulted in fatalities - but many floods that just *affected* people didn't result in fatalities.
 
 ```{python}
+#| fig-cap: "Figure 3: Distribution of people affected and people injured (log10 scale) by flood fatality outcome in the training set."
 fig, axes = plt.subplots(1, 2, figsize=(15, 8))
 
 for ax, col, ylabel in [
@@ -238,6 +256,7 @@ Because only \~17.2% of flood events are fatal (as reflected over time by the gr
 Class weights are assigned as balanced to ensure that fatal floods receive proper representation despite being the minority class. To this end, `StratifiedKFold` was utilized for our cross validation of results, with 5 folds utilized.
 
 ```{python}
+#| tbl-cap: "Table 2: Five-fold cross-validation F1 and recall scores for the baseline and candidate models on the training set."
 from sklearn.model_selection import StratifiedKFold, cross_validate, RandomizedSearchCV
 from sklearn.dummy import DummyClassifier
 from sklearn.linear_model import LogisticRegression
@@ -268,7 +287,7 @@ cv_results = pd.DataFrame(results).T.sort_values("f1", ascending=False).round(4)
 cv_results
 ```
 
-We can see that the decision tree classifier preformed better in both recall and F1 compared to the logistic regression. As such, we will proceed with that model and work to optimize hyperparameters for it.
+As shown in Table 2, the decision tree classifier performed better in both recall and F1 compared to the logistic regression. As such, we will proceed with that model and work to optimize hyperparameters for it.
 
 Because of the limited computing power available to us and the potential scale of the parameter space, we utilize a randomized search with 10 iterations chosen randomly from a spread of max depths and leaf counts, as seen below. We choose going forward to score the model utilizing just F1 - we would not want the model to overfit the data and maximize recall by inflating the number of floods predicted 'fatal,' as such model behavior could result in wasted first responder efforts. Though recall played an important role in model selection, F1 will be our scoring metric going forward.
 
@@ -292,7 +311,7 @@ best_model = search.best_estimator_
 search.best_params_, round(search.best_score_, 4)
 ```
 
-From configurations trialed in our search, we find the optimal result to be with minimum leafs at 5, and max depth at 20, giving a validation F1 score of 0.6127. We are now prepared to test our model on the test data set and proceed with analysis.
+From configurations trialed in our search, we find the optimal result to be with minimum samples per leaf at 5, and max depth at 20, giving a validation F1 score of 0.6127. We are now prepared to test our model on the test data set and proceed with analysis.
 
 # Results
 
@@ -337,7 +356,7 @@ While it wasn't a primary metric we scored by while developing the model, we can
 
 For starters, as seen in the confusion matrix, the model predicts non-fatal 1,216 times when the result was actually fatal. This is an unfortunate result of the aforementioned trade-off for F1 over recall once we had settled on the decision tree. We wouldn't want a model that inflates false positives for the purpose of maxing out recall as it could waste disaster response efforts where they aren't needed, but our model is going to miss fatal predictions as a result, which could also jeopardize lives as the trade off. This limits the model's functionality as a sole disaster-response predictor.
 
-Additionally, the data itself has limitations as a result of it being a conglomeration of many sources with many entries. As seen below, 1,657 of our initial rows had NA as the entry for our target of fatalities and needed to be removed, which represents \~1.21% of the original data. Other potentially useful indicators (like homes destroyed or damage in \$USD) were only recorded in some sources and thus not prevalent enough in the data to be usable for our purposes. Lastly, the authors of the paper identified that poor records across sources meant that 8,788 floods in the database were potential duplicates (located within `Potential_Duplicate_Events.csv` in the original report) and could result in the model weighing certain event double by virtue of their being two entries for the same flood.
+Additionally, the data itself has limitations as a result of it being a conglomeration of many sources with many entries. As seen below, 1,657 of our initial rows had NA as the entry for our target of fatalities and needed to be removed, which represents \~1.21% of the original data. Other potentially useful indicators (like homes destroyed or damage in \$USD) were only recorded in some sources and thus not prevalent enough in the data to be usable for our purposes. Lastly, the authors of the paper identified that poor records across sources meant that 8,788 floods in the database were potential duplicates (located within `Potential_Duplicate_Events.csv` in the original report) and could result in the model double-counting certain events by virtue of their being two entries for the same flood.
 
 ```{python}
 print(f'Number of entries with NA as fatalities: {na_count}')
@@ -347,6 +366,9 @@ print(f'Percent of entries with NA as fatalities: {na_prop:.2f}')
 Despite these limitations, our model could still be useful in disaster response planning and resource allocation. Though it could be argued our threshold of 'any' fatalities might overstate the danger of a given flood in the face of other disasters that need tending to (like annual wildfires or earthquakes), and especially so in the face of some of the maximum fatalities counts present in the data, in the modern world the loss of life from events like this is so preventable that it doesn't take much for a flood to be classified as a 'disaster.' Public Safety Canada, for example, classifies a disaster as any event that, among other qualifying criteria, kills 10 or more or affects/injures/evacuates 100 or more people.^2^ The Global Disaster Alert and Coordination System classifies a flood as Green Alert for any and all death or displacement, and Orange Alert (which calls for potential international aid) as \>100 dead or \>80,000 displaced.^3^ Therefore, the predicted presence of any fatalities and injuries/displacements should be indicative of a flood that has the potential to turn into a humanitarian disaster - and our model is suited for predicting these fatalities.
 
 Our modeling is not unique in the field of data science, either - in April of 2026, the Institute of Electrical and Electronics Engineers published a study that suggested present flood-response tactics are inflexible and allocate resources inefficiently (two assertions that our model hopes to tackle as well). Their proposed system titled FloodMod utilizes a Long-Short-Term-Memory Neural Network, alongside operator oversight, to handle incoming requests from both disaster response coordinators and individuals who are requesting assistance via a web connection to the service (likely through cell phones or any other way they have to access the internet). The system seeks to streamline operator workload and first-responder efforts by doing much of the heavy computation work of generating optimized plans for response as disaster statistics and help requests come in to the system.^4^ Even this is not the extent of this type of research - this paper alone is built on the back of many other cited papers utilizing LLMs for disaster response planning, earthquake risk severity, and even more impossible-for-a-human work like interpreting disaster updates from the mass amounts of data posted to social media during such a disaster.
+
+In future iterations of this analysis, follow up questions can be asked such as considering whether adding hazard features (like rainfall intensity and river discharge) can reduce false negatives on floods that are fatal. Future analyses could also evaluate the models performance 
+seperately across individual sources after removing any duplicates. 
 
 In conclusion, our decision tree model provided a substantial improvement over our baseline and the logistic regression it beat out, achieving a test f1 score of 0.6117 and a test accuracy of 84.16%. Despite the limitations present within the data and within our model, disaster response planning through predictive modeling is a growing field, and we can expect more research on this topic to be forthcoming in the age of AI. We hope that our model, and others like it, can work to streamline disaster response coordination and work to save lives.
 

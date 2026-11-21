@@ -6,7 +6,7 @@ We are committed to making participation in this project a harassment-free exper
 
 Examples of acceptable behavior by participants include:
 - Treating contributors with respect
-- Providing feedback focus on the work only
+- Providing feedback focused on the work only
 - Welcome questions and contributions from people with different backgrounds
 - Communicating openly and friendly when disagreements arise
 
