@@ -7,7 +7,7 @@ We are committed to making participation in this project a harassment-free exper
 Examples of acceptable behavior by participants include:
 - Treating contributors with respect
 - Providing feedback focused on the work only
-- Welcome questions and contributions from people with different backgrounds
+- Welcoming questions and contributions from people with different backgrounds
 - Communicating openly and friendly when disagreements arise
 
 Examples of unacceptable behavior by participants include:
@@ -15,7 +15,7 @@ Examples of unacceptable behavior by participants include:
 - Personal attacks
 - Trolling or insulting/derogatory comments
 - Public or private harassment
-- Publishing other's private information, such as physical or electronic addresses, without explicit permission
+- Publishing others' private information, such as physical or electronic addresses, without explicit permission
 - Other unethical or unprofessional conduct
 
 Project maintainers have the right and responsibility to remove, edit, or reject comments, commits, code, wiki edits, issues, and other contributions that are not aligned to this Code of Conduct, or to ban temporarily or permanently any contributor for other behaviors that they deem inappropriate, threatening, offensive, or harmful.

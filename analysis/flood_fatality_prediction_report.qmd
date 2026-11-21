@@ -35,14 +35,14 @@ In the aftermath of a flood, impact indicators such as the region affected, the 
 This makes early risk classification valuable for resource allocation and where to prioritize aid and flag under-reported fatal events. 
 
 To address this problem, our study asks the following investigative question: "Given a flood event's geographic, temporal, and reported impact characteristics, can we predict whether the flood results in at least one fatality?"
-We answered this question by using data published by the U.S. Geological Survey (USGS) that combines four disaster archives into a single aggregated dataset of 136,642 total recorded events. One row in our filtered dataset represents a recorded flood event 
+We answered this question by using data published by the U.S. Geological Survey (USGS) that combines four disaster archives into a single aggregated dataset of 136,642 total recorded events.^1^ One row in our filtered dataset represents a recorded flood event 
 between 1900 and 2025. We considered a total of 6 predictors (Year, Latitude, Longitude, Affected, Injured, Country) that relate to a flood event's location, timing, and reported impact. Our target variable is defined as binary, indicating whether the flood resulted in at least one fatality or not. 
 
 # Methods
 
 ## Data
 
-This project utilizes an aggregated dataset of global floods published by the U.S. Geological Survey (USGS) and written by *Archfield et al.*^1^ The publication as well as the data can be found [here](https://www.sciencebase.gov/catalog/item/69e7e00db66b0164d0f7302d). The code below downloads the full data set, `Aggregated_Flood_Data.xlsx` , into the raw data folder. Because of the relatively small file size, the data will also already be present within the repository, but the function `data_download_xlsx` allows for it to be downloaded to any targeted repository if needed. Sheets within the excel file give the sources as originally compiled, while the sheet `Aggregated` gives the full data set as compiled and cleaned by the authors of the paper.
+This project utilizes an aggregated dataset of global floods published by the U.S. Geological Survey (USGS) and written by *Magers et al.*^1^ The publication as well as the data can be found [here](https://www.sciencebase.gov/catalog/item/69e7e00db66b0164d0f7302d). The code below downloads the full data set, `Aggregated_Flood_Data.xlsx` , into the raw data folder. Because of the relatively small file size, the data will also already be present within the repository, but the function `data_download_xlsx` allows for it to be downloaded to any targeted repository if needed. Sheets within the excel file give the sources as originally compiled, while the sheet `Aggregated` gives the full data set as compiled and cleaned by the authors of the paper.
 
 ```{python}
 # Function to download raw data folder and save it locally.
@@ -105,7 +105,7 @@ os.makedirs("../data/processed", exist_ok=True)
 cleaned_df = X.assign(Fatal = y)
 cleaned_df.to_csv("../data/processed/flood_data_cleaned.csv", index=False)
 
-pd.concat([X,y], axis=1).head()
+pd.concat([X,y], axis=1).head() #show a header of what the data looks like
 ```
 
 ## Analysis
@@ -236,7 +236,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-Our preprocessor is constructed as per the numeric and categorical features mentioned before. A column transformer is assembled, with a pipeline utilizing median imputation and scaling for numeric features as well as a pipeline using OneHotEncoder for the country columns, imputing by most frequent.
+Our preprocessor is constructed as per the numeric and categorical features mentioned before. A column transformer is assembled, with a pipeline utilizing median imputation and scaling for numeric features as well as a pipeline using one-hot encoding for the country columns, imputing by most frequent.
 
 ```{python}
 preprocessor = make_column_transformer(
