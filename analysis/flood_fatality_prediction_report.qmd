@@ -18,11 +18,24 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 # Summary
 
-## \[Summary placeholder\]
+In this analysis, we considered how a flood events geographic, temporal, and severity characteristics can be used to predict
+whether the flood results in at least one fatality. We build a classification model using a tuned decision tree classifier on historical 
+flood records which generalized best to unseen data, achieving an F1 score of 0.6117 and approximately 73% recall on fatal flood events. This
+result significantly outperformed our baseline dummy model F1 score of 0. Results from our analysis matter during real emergencies, information such as 
+flood location, timing, and injuries are known prior to final death tolls being confirmed. As a result, a predictive model could assist first responders and 
+emergency personnel in allocating their limited time and resources most effectively to save as many lives as possible. Several limitations came up during 
+our analysis as our data source aggregates records across multiple international disaster databases which introduces inconsistencies in reporting standards and a high 
+a missigness count in flood duration. Furthermore, we saw duplicates in flood events that arose from poor records across data sources. 
 
 # Introduction
 
-## \[Introduction placeholder\]
+Flooding is one of the most frequent and commonly occuring natural disasters worldwide that displaces millions of people every year and causes severe loss of life, especially when emeregency response services are delayed. 
+In the aftermath of a flood, impact indicators such as the region affected, the floods timing, and counts of the injured or affected are often reported before death tolls are confirmed. 
+This makes early risk classification valuable for resource allocation and where to prioritize aid and flag under-reported fatal events. 
+
+To address this problem, our study asks the following investigative question: "Given a flood events geogrpahic, temporal, and reported impact characteristics, can we predict whether the flood results in at leat one fatality?"
+We anwsered this question by using data published by the U.S. Geological Survey (USGS) that combines four disaster archives into a single aggregated dataset of 136,642 total recorded events. A row in our filtered dataset represents a recorded flood event 
+between 1900 and 2025. We considered a total of 7 predictors that relate to a flood events location, timing, and reported impact. Our target variable is defined as binary, indicating whether the flood resulted in at least one fatality or not. 
 
 # Methods
 
