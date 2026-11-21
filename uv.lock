@@ -449,7 +449,7 @@ wheels = [
 [[package]]
 name = "dsci-522-predicting-global-flood-impact-and-damage"
 version = "0.1.0"
-source = { editable = "." }
+source = { virtual = "." }
 dependencies = [
     { name = "ipykernel" },
     { name = "jupyterlab" },
