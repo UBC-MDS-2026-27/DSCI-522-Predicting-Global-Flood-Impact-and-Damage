@@ -45,6 +45,9 @@ Open `analysis/flood_fatality_prediction_report.html` to read the rendered repor
 The software code contained within this repository is licensed under the MIT license. The report is licensed under the CC BY-NC-ND 4.0. See [LICENSE.md](LICENSE.md) for the licenses covering the project code and report.
 
 ## AI use statement:
+Fang Fang: I used to the Chatgpt to teach me how I can insert a link to other file in the repository.
+Example prompts: "how I can insert a link to other file in the repository?"
+
 
 Everett Rendon: The LLM I utilized to assist with my portion of the report was ChatGPT. I utilized it to generate some of the trivial plotting code in the Discussion section of the report and for some instructions on managing uv, such as a bugfix with pyproject.toml in which a folder was being generated under the assumption our project was to contain exportable functions, which it did not. It also acted as a spellcheck and proofreader after I had completed the methods, analysis, and discussion sections where it caught some small typos and old information that needed updating as our report structure changed.
 
