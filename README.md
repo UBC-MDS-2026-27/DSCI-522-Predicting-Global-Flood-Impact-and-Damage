@@ -48,6 +48,8 @@ The software code contained within this repository is licensed under the MIT lic
 
 Everett Rendon: The LLM I utilized to assist with my portion of the report was ChatGPT. I utilized it to generate some of the trivial plotting code in the Discussion section of the report and for some instructions on managing uv, such as a bugfix with pyproject.toml in which a folder was being generated under the assumption our project was to contain exportable functions, which it did not. It also acted as a spellcheck and proofreader after I had completed the methods, analysis, and discussion sections where it caught some small typos and old information that needed updating as our report structure changed.
 
+Example prompts: `What code can be utilized to display the confusion matrix cleanly?` `Given this traceback, how do I resolve this uv error?` `How can I display the count of rows containing NA's?`
+
 ## Link to the rendered report:
 
 [View the report](analysis/flood_fatality_prediction_report.html)
