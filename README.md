@@ -54,9 +54,9 @@ Niroshan Benjamin: I used Google Antigravity (Gemini and Claude models) to refin
 
 Example prompts:
 
--Check my modelling file to see if the train/test split, preprocessing pipeline, and cross-validation are correct and follow the milestone requirements
+- Check my modelling file to see if the train/test split, preprocessing pipeline, and cross-validation are correct and follow the milestone requirements
 
--What do I need to change in my notebook to switch from the DesInventar sheet to the Aggregated sheet?
+- What do I need to change in my notebook to switch from the DesInventar sheet to the Aggregated sheet?
 
 Abdullah Naeem: In this project, I used Kiro and Google Antigravity (Claude and Gemini) to proofread and refine my portion of the exploratory data analysis and visualizations. I used them to get ideas on what visualizations might help with understanding the data based on the EDA process. I also used them to help with proofreading my writing for my section of the report. No custom instructions or system files were used from my end.
 
