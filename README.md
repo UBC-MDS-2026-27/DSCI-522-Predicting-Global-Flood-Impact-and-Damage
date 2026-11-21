@@ -50,6 +50,22 @@ Everett Rendon: The LLM I utilized to assist with my portion of the report was C
 
 Example prompts: `What code can be utilized to display the confusion matrix cleanly?` `Given this traceback, how do I resolve this uv error?` `How can I display the count of rows containing NA's?`
 
+Niroshan Benjamin: I used Google Antigravity (Gemini and Claude models) to refine the investigative question, draft and review my preprocessing, cross-validation, and hyperparameter tuning code in modelling.ipynb, check for data leakage, draft concise GitHub issue and pull request descriptions, and troubleshoot Git/GitHub workflow steps. No custom instruction or system prompt files were used.
+
+Example prompts:
+
+-Check my modelling file to see if the train/test split, preprocessing pipeline, and cross-validation are correct and follow the milestone requirements
+
+-What do I need to change in my notebook to switch from the DesInventar sheet to the Aggregated sheet?
+
+Abdullah Naeem: In this project, I used Kiro and Google Antigravity (Claude and Gemini) to proofread and refine my portion of the exploratory data analysis and visualizations. I used them to get ideas on what visualizations might help with understanding the data based on the EDA process. I also used them to help with proofreading my writing for my section of the report. No custom instructions or system files were used from my end.
+
+Example Prompts:
+
+- "Check over my data visualizations and EDA to see if the chosen visualizations are relevant to the investigative question and that they follow the milestone criteria."
+
+- "Can you proofread my writing for my section of the report and check for typos, grammatical errors, and clarity?"
+
 ## Link to the rendered report:
 
 [View the report](analysis/flood_fatality_prediction_report.html)
