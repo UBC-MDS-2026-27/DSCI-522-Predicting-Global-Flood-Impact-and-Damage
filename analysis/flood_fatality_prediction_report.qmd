@@ -3,6 +3,7 @@ title: "Predicting Flood Fatality Given a Flood's Location and Severity"
 author: "Abdullah Naeem, Niroshan Benjamin, Everett Rendon, Fang Fang"
 date: "2026/11/19"
 jupyter: python3
+tbl-cap-location: bottom
 ---
 
 ```{python}
@@ -20,7 +21,7 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 In this analysis, we considered how a flood event's geographic, temporal, and severity characteristics can be used to predict
 whether the flood results in at least one fatality. We built a classification model using a tuned decision tree classifier on historical 
-flood records which generalized best to unseen data, achieving an F1 score of 0.6117 and approximately 73% recall on fatal flood events. This
+flood records which generalized best to unseen data, achieving an F1 score of 0.6114 and approximately 73% recall on fatal flood events. This
 result significantly outperformed our baseline dummy model F1 score of 0. Results from our analysis matter during real emergencies, as information such as 
 flood location, timing, and injuries are known prior to final death tolls being confirmed. As a result, a predictive model could assist first responders and 
 emergency personnel in allocating their limited time and resources most effectively to save as many lives as possible. Several limitations came up during 
@@ -34,14 +35,14 @@ In the aftermath of a flood, impact indicators such as the region affected, the 
 This makes early risk classification valuable for resource allocation and where to prioritize aid and flag under-reported fatal events. 
 
 To address this problem, our study asks the following investigative question: "Given a flood event's geographic, temporal, and reported impact characteristics, can we predict whether the flood results in at least one fatality?"
-We answered this question by using data published by the U.S. Geological Survey (USGS) that combines four disaster archives into a single aggregated dataset of 136,642 total recorded events. One row in our filtered dataset represents a recorded flood event 
-between 1900 and 2025. We considered a total of 6 predictors (Year, Latitude, Longitude, Affected, Injured, Country) that relate to a flood events location, timing, and reported impact. Our target variable is defined as binary, indicating whether the flood resulted in at least one fatality or not. 
+We answered this question by using data published by the U.S. Geological Survey (USGS) that combines four disaster archives into a single aggregated dataset of 136,642 total recorded events.^1^ One row in our filtered dataset represents a recorded flood event 
+between 1900 and 2025. We considered a total of 6 predictors (Year, Latitude, Longitude, Affected, Injured, Country) that relate to a flood event's location, timing, and reported impact. Our target variable is defined as binary, indicating whether the flood resulted in at least one fatality or not. 
 
 # Methods
 
 ## Data
 
-This project utilizes an aggregated dataset of global floods published by the U.S. Geological Survey (USGS) and written by *Archfield et al.*^1^ The publication as well as the data can be found [here](https://www.sciencebase.gov/catalog/item/69e7e00db66b0164d0f7302d). The code below downloads the full data set, `AggregatedFloodData.xlsx` , into the raw data folder. Because of the relatively small file size, the data will also already be present within the repository, but the function `data_download_xlsx` allows for it to be downloaded to any targeted repository if needed. Sheets within the excel file give the sources as originally compiled, while the sheet `Aggregated` gives the full data set as compiled and cleaned by the authors of the paper.
+This project utilizes an aggregated dataset of global floods published by the U.S. Geological Survey (USGS) and written by *Magers et al.*^1^ The publication as well as the data can be found [here](https://www.sciencebase.gov/catalog/item/69e7e00db66b0164d0f7302d). The code below downloads the full data set, `Aggregated_Flood_Data.xlsx` , into the raw data folder. Because of the relatively small file size, the data will also already be present within the repository, but the function `data_download_xlsx` allows for it to be downloaded to any targeted repository if needed. Sheets within the excel file give the sources as originally compiled, while the sheet `Aggregated` gives the full data set as compiled and cleaned by the authors of the paper.
 
 ```{python}
 # Function to download raw data folder and save it locally.
@@ -104,12 +105,12 @@ os.makedirs("../data/processed", exist_ok=True)
 cleaned_df = X.assign(Fatal = y)
 cleaned_df.to_csv("../data/processed/flood_data_cleaned.csv", index=False)
 
-pd.concat([X,y], axis=1).head()
+pd.concat([X,y], axis=1).head() #show a header of what the data looks like
 ```
 
 ## Analysis
 
-To avoid leakage, we now split our data, with 20% reserved for testing. For replicability, we will set a constant random state of `522` every time randomity is a factor.
+To avoid leakage, we now split our data, with 20% reserved for testing. For reproducibility, we will set a constant random state of `522` every time randomity is a factor.
 
 ```{python}
 X_train, X_test, y_train, y_test = train_test_split(
@@ -235,7 +236,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-Our preprocessor is constructed as per the numeric and categorical features mentioned before. A column transformer is assembled, with a pipeline utilizing median imputation and scaling for numeric features as well as a pipeline using OneHotEncoder for the country columns, imputing by most frequent.
+Our preprocessor is constructed as per the numeric and categorical features mentioned before. A column transformer is assembled, with a pipeline utilizing median imputation and scaling for numeric features as well as a pipeline using one-hot encoding for the country columns, imputing by most frequent.
 
 ```{python}
 preprocessor = make_column_transformer(
@@ -270,10 +271,7 @@ dummy_pipe = make_pipeline(preprocessor, DummyClassifier(strategy="most_frequent
 dummy_scores = cross_validate(dummy_pipe, X_train, y_train, cv=cv, scoring=scoring)
 
 results = {"Dummy": {m: dummy_scores[f"test_{m}"].mean() for m in scoring}}
-pd.DataFrame(results).T.round(4)
-```
 
-```{python}
 models = {
     "Logistic Regression": make_pipeline(preprocessor, LogisticRegression(max_iter=1000, class_weight="balanced", random_state=522)),
     "Decision Tree": make_pipeline(preprocessor, DecisionTreeClassifier(max_depth=15, class_weight="balanced", random_state=522)),
@@ -291,7 +289,7 @@ As shown in Table 2, the decision tree classifier performed better in both recal
 
 Because of the limited computing power available to us and the potential scale of the parameter space, we utilize a randomized search with 10 iterations chosen randomly from a spread of max depths and leaf counts, as seen below. We choose going forward to score the model utilizing just F1 - we would not want the model to overfit the data and maximize recall by inflating the number of floods predicted 'fatal,' as such model behavior could result in wasted first responder efforts. Though recall played an important role in model selection, F1 will be our scoring metric going forward.
 
-As pursuant to the golden rule, no test data is touched during this process.
+Following the golden rule, no test data is touched during this process.
 
 ```{python}
 dt_pipe = make_pipeline(
@@ -311,7 +309,7 @@ best_model = search.best_estimator_
 search.best_params_, round(search.best_score_, 4)
 ```
 
-From configurations trialed in our search, we find the optimal result to be with minimum samples per leaf at 5, and max depth at 20, giving a validation F1 score of 0.6127. We are now prepared to test our model on the test data set and proceed with analysis.
+From configurations trialed in our search, we find the optimal result to be with minimum samples per leaf at 5, and max depth at 20, giving a validation F1 score of 0.6121. We are now prepared to test our model on the test data set and proceed with analysis.
 
 # Results
 
@@ -332,11 +330,22 @@ cm = pd.DataFrame(
     columns=["Pred Non-Fatal", "Pred Fatal"],
 )
 
-ConfusionMatrixDisplay(
+disp = ConfusionMatrixDisplay(
     confusion_matrix=cm.to_numpy(),
     display_labels=["Non-Fatal", "Fatal"]
 ).plot(cmap="Blues", values_format=",d")
 
+disp.figure_.text(
+    0.5, 0.02,
+    "Figure 4: Confusion matrix for the decision tree classifier on test data.",
+    ha="center",
+    fontsize=10
+)
+
+```
+
+```{python}
+#| tbl-cap: "Table 3: Test F1 and accuracy scores for the decision tree classifier."
 test_accuracy = best_model.score(X_test, y_test)
 
 score_comparison = pd.DataFrame({
@@ -352,7 +361,7 @@ Though accuracy was not a metric by which we scored in our random search, it can
 
 # Discussion
 
-While it wasn't a primary metric we scored by while developing the model, we can see that our model ended with an accuracy of 84.16%, an improvement over the baseline 82.8%. This gain was achieved alongside our test F1 score of 0.6117 (compared again to the baseline's 0). Even more notably, the gap between our validation F1 and test F1 is only a decrease of 0.001 between the two, indicating that the behaviors the model learned were generalizable to our test data without overfitting. Overall our model provided a strong improvement over the baseline, and this is what we'd expected to find. Our EDA gave us several promising features to utilize as predictors and the model was able to capitalize off of them to produce a decision tree that generalized well to the test data. There are, however, limitations on our results.
+While it wasn't a primary metric we scored by while developing the model, we can see that our model ended with an accuracy of 84.13%, an improvement over the baseline 82.8%. This gain was achieved alongside our test F1 score of 0.6114 (compared again to the baseline's 0). Even more notably, the gap between our validation F1 and test F1 is only a decrease of 0.0007 between the two, indicating that the behaviors the model learned were generalizable to our test data without overfitting. Overall our model provided a strong improvement over the baseline, and this is what we'd expected to find. Our EDA gave us several promising features to utilize as predictors and the model was able to capitalize off of them to produce a decision tree that generalized well to the test data. There are, however, limitations on our results.
 
 For starters, as seen in the confusion matrix, the model predicts non-fatal 1,216 times when the result was actually fatal. This is an unfortunate result of the aforementioned trade-off for F1 over recall once we had settled on the decision tree. We wouldn't want a model that inflates false positives for the purpose of maxing out recall as it could waste disaster response efforts where they aren't needed, but our model is going to miss fatal predictions as a result, which could also jeopardize lives as the trade off. This limits the model's functionality as a sole disaster-response predictor.
 
@@ -367,10 +376,10 @@ Despite these limitations, our model could still be useful in disaster response 
 
 Our modeling is not unique in the field of data science, either - in April of 2026, the Institute of Electrical and Electronics Engineers published a study that suggested present flood-response tactics are inflexible and allocate resources inefficiently (two assertions that our model hopes to tackle as well). Their proposed system titled FloodMod utilizes a Long-Short-Term-Memory Neural Network, alongside operator oversight, to handle incoming requests from both disaster response coordinators and individuals who are requesting assistance via a web connection to the service (likely through cell phones or any other way they have to access the internet). The system seeks to streamline operator workload and first-responder efforts by doing much of the heavy computation work of generating optimized plans for response as disaster statistics and help requests come in to the system.^4^ Even this is not the extent of this type of research - this paper alone is built on the back of many other cited papers utilizing LLMs for disaster response planning, earthquake risk severity, and even more impossible-for-a-human work like interpreting disaster updates from the mass amounts of data posted to social media during such a disaster.
 
-In future iterations of this analysis, follow up questions can be asked such as considering whether adding hazard features (like rainfall intensity and river discharge) can reduce false negatives on floods that are fatal. Future analyses could also evaluate the models performance 
-seperately across individual sources after removing any duplicates. 
+In future iterations of this analysis, follow up questions can be asked such as considering whether adding hazard features (like rainfall intensity and river discharge) can reduce false negatives on floods that are fatal. Future analyses could also evaluate the model's performance 
+separately across individual sources after removing any duplicates. 
 
-In conclusion, our decision tree model provided a substantial improvement over our baseline and the logistic regression it beat out, achieving a test f1 score of 0.6117 and a test accuracy of 84.16%. Despite the limitations present within the data and within our model, disaster response planning through predictive modeling is a growing field, and we can expect more research on this topic to be forthcoming in the age of AI. We hope that our model, and others like it, can work to streamline disaster response coordination and work to save lives.
+In conclusion, our decision tree model provided a substantial improvement over our baseline and the logistic regression it beat out, achieving a test f1 score of 0.6114 and a test accuracy of 84.13%. Despite the limitations present within the data and within our model, disaster response planning through predictive modeling is a growing field, and we can expect more research on this topic to be forthcoming in the age of AI. We hope that our model, and others like it, can work to streamline disaster response coordination and work to save lives.
 
 # References
 
