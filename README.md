@@ -48,6 +48,14 @@ The software code contained within this repository is licensed under the MIT lic
 
 Everett Rendon: The LLM I utilized to assist with my portion of the report was ChatGPT. I utilized it to generate some of the trivial plotting code in the Discussion section of the report and for some instructions on managing uv, such as a bugfix with pyproject.toml in which a folder was being generated under the assumption our project was to contain exportable functions, which it did not. It also acted as a spellcheck and proofreader after I had completed the methods, analysis, and discussion sections where it caught some small typos and old information that needed updating as our report structure changed.
 
+Niroshan Benjamin: I used Google Antigravity (Gemini and Claude models) to refine the investigative question, draft and review my preprocessing, cross-validation, and hyperparameter tuning code in modelling.ipynb, check for data leakage, draft concise GitHub issue and pull request descriptions, and troubleshoot Git/GitHub workflow steps. No custom instruction or system prompt files were used.
+
+Example prompts:
+
+-Check my modelling file to see if the train/test split, preprocessing pipeline, and cross-validation are correct and follow the milestone requirements
+
+-What do I need to change in my notebook to switch from the DesInventar sheet to the Aggregated sheet?
+
 ## Link to the rendered report:
 
 [View the report](analysis/flood_fatality_prediction_report.html)
