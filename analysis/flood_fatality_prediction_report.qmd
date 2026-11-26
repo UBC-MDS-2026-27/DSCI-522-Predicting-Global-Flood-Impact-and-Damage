@@ -4,6 +4,9 @@ author: "Abdullah Naeem, Niroshan Benjamin, Everett Rendon, Fang Fang"
 date: "2026/11/19"
 jupyter: python3
 tbl-cap-location: bottom
+format:
+  html:
+    embed-resources: true
 ---
 
 ```{python}
