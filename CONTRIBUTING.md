@@ -37,9 +37,11 @@ Confirm that `analysis-env` is running.
 
 3. Enter `root@localhost:2222`. If asks for the platform of the remote host,, select **Linux** as the remote platform and accept the SSH host fingerprint.
 
-4.Open the Command Palette(same as step 2), select **Python: Select Interpreter**, then **Enter interpreter path...** and enter `/opt/venv/bin/python`.
+4. Click **Open Folder** in Positron and enter `/workspace`. 
 
-5. To check, run `import sys; print(sys.executable)` in the Console. It should print `/opt/venv/bin/python`.
+5.Open the Command Palette(same as step 2), select **Python: Select Interpreter**, then **Enter interpreter path...** and enter `/opt/venv/bin/python`.
+
+6. To check, run `import sys; print(sys.executable)` in the Console. It should print `/opt/venv/bin/python`.
 
 ### After Using
 When you are done, close the Positron window, then stop the container in a terminal on your computer:
@@ -66,6 +68,46 @@ Please make changes after creating your own branch:
 ```bash
 git switch -c your-branch-name
 ```
+## Add or Update a Package
+To add or update a Python package, please follow these steps:
+
+1. make a new branch as last section asked.
+
+2. 
+To add a new package using `uv`:
+```bash
+uv add package-name
+```
+
+To update an existing package, use:
+```bash
+uv lock --upgrade-package package-name
+```
+
+3. Commit and push the changes:
+```bash
+git add pyproject.toml uv.lock
+git commit -m "your-descriptive-commit-name"
+git push -u origin your-branch-name
+```
+
+4. Wait for GitHub Actions to publish the new image and update the tag in `docker-compose.yml`.
+
+5. Then pull the latest changes and download the updated Docker image run:
+```bash
+git pull
+docker compose pull
+```
+
+## Publish the Report
+After re-rendering, copy it to `docs/index.html` and push by:
+```bash
+mkdir -p docs
+cp <path-to-your-report>.html docs/index.html
+touch docs/.nojekyll
+```
+
+Then commit and push the updated report to your branch, and create a pull request. After merging into `main`, check that the report is correctly displayed on [GitHub Pages](https://ubc-mds-2026-27.github.io/DSCI-522-Predicting-Global-Flood-Impact-and-Damage/).
 
 ## AI Policy
 If you are using generative AI, please follow the AI policy below:
