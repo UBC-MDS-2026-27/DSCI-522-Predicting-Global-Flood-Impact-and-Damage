@@ -6,12 +6,7 @@ We welcome feedback, bug reports, suggestions and contributions to this data ana
 Create an associated issue in this repository. For a bug, illustrate the bug by describing how to reproduce it including at least one error message. For a suggestion, explain what you want to change and the reason.
 
 ## Set up environment
-clone the repository by 
-```bash
-git clone https://github.com/UBC-MDS-2026-27/DSCI-522-Predicting-Global-Flood-Impact-and-Damage.git
-cd DSCI-522-Predicting-Global-Flood-Impact-and-Damage
-uv sync
-```
+We use Docker to ensure that all contributors work in the same environment with same Python and package versions. Please follow the ["How to run the analysis" in README](README.md#how-to-run-the-analysis) (download and install the Docker, clone the repository and enter the project directory, create an SSH key and download the image).
 
 The detailed instructions to run the analysis lies in [README](README.md).
 
