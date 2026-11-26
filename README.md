@@ -9,7 +9,7 @@
 
 ## Project Summary:
 
-Could we predict whether a flood causes at least one death based on its location and other characteristics related to impact? Our team compared several classification models and chose a tuned decision tree model that performed best and generalized well on the test data set. It achieved an test F1 score of 0.6114 and a test accuracy of 84.13%. From thsi model, we were able to identify about 73% of fatal events on the test data set. This project suggested that we have reason to believe the recorded event characteristics contain useful information about fatality.
+Could we predict whether a flood causes at least one death based on its location and other characteristics related to impact? Our team compared several classification models and chose a tuned decision tree model that performed best and generalized well on the test data set. It achieved a test F1 score of 0.6114 and a test accuracy of 84.13%. From this model, we were able to identify about 73% of fatal events on the test data set. This project suggested that we have reason to believe the recorded event characteristics contain useful information about fatality.
 
 ## How to run the analysis:
 Clone the repository and enter the project directory:
@@ -68,4 +68,4 @@ Example Prompts:
 
 ## Link to the rendered report:
 
-[View the report](analysis/flood_fatality_prediction_report.html)
+[View the rendered report on GitHub Pages](https://ubc-mds-2026-27.github.io/DSCI-522-Predicting-Global-Flood-Impact-and-Damage/)
