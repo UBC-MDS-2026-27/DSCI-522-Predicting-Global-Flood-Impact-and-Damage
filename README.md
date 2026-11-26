@@ -30,11 +30,15 @@ Render the report inside the container:
 docker compose run --rm analysis-env uv run quarto render analysis/flood_fatality_prediction_report.qmd
 ```
 Because `--rm` is used, the container stops and removes itself automatically when rendering finishes (if you start it with `docker compose up -d`, stop and remove it with `docker compose down`).
+
 Open `analysis/flood_fatality_prediction_report.html` to read the rendered report. The required Excel data file is included at `data/raw/Aggregated_Flood_Data.xlsx`.
+
 For instructions on editing the code, adding packages, or contributing to this project, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## Dependencies:
 - Docker Desktop (the container defined by [Dockerfile](Dockerfile) and [docker-compose.yml](docker-compose.yml) includes Python, `uv`, Quarto, and all required packages)
 - Git
+
 Python packages needed are listed in [pyproject.toml](pyproject.toml). The environment is locked in [uv.lock](uv.lock).
 
 ## Licenses:
