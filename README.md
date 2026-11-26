@@ -9,36 +9,37 @@
 
 ## Project Summary:
 
-Could we predict whether a flood causes at least one death based on its location and other characteristics related to impact? Our team compared several classification models and chose a tuned decision tree model that performed best and generalized well on the test data set. It achieved an test F1 score of 0.6114 and a test accuracy of 84.13%. From thsi model, we were able to identify about 73% of fatal events on the test data set. This project suggested that we have reason to believe the recorded event characteristics contain useful information about fatality.
+Could we predict whether a flood causes at least one death based on its location and other characteristics related to impact? Our team compared several classification models and chose a tuned decision tree model that performed best and generalized well on the test data set. It achieved a test F1 score of 0.6114 and a test accuracy of 84.13%. From this model, we were able to identify about 73% of fatal events on the test data set. This project suggested that we have reason to believe the recorded event characteristics contain useful information about fatality.
 
 ## How to run the analysis:
-
 Clone the repository and enter the project directory:
-
 ``` bash
 git clone https://github.com/UBC-MDS-2026-27/DSCI-522-Predicting-Global-Flood-Impact-and-Damage.git
 cd DSCI-522-Predicting-Global-Flood-Impact-and-Damage
 ```
-
-Install the Python environment with uv:
-
+Create an SSH key if you do not already have one (press Enter at each prompt; without it, Docker creates a folder at `~/.ssh/id_ed25519.pub` and SSH into the container fails until you delete that folder and create the key):
 ``` bash
-uv sync
+ssh-keygen -t ed25519
 ```
-
-With Quarto installed, render the report from the project directory:
-
+With Docker Desktop running, download the project image:
 ``` bash
-uv run quarto render analysis/flood_fatality_prediction_report.qmd
+docker compose pull
 ```
+Render the report inside the container:
+``` bash
+docker compose run --rm analysis-env uv run quarto render analysis/flood_fatality_prediction_report.qmd
+```
+Because `--rm` is used, the container stops and removes itself automatically when rendering finishes (if you start it with `docker compose up -d`, stop and remove it with `docker compose down`).
 
 Open `analysis/flood_fatality_prediction_report.html` to read the rendered report. The required Excel data file is included at `data/raw/Aggregated_Flood_Data.xlsx`.
 
-## Dependencies:
+For instructions on editing the code, adding packages, or contributing to this project, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
-- Python (required version in [pyproject.toml](pyproject.toml))
-- uv for installing the python environment (version 0.12 or higher)
-- quarto for rendering report (version 1.10 or higher) Python packages needed are listed in [pyproject.toml](pyproject.toml). The environment is locked in [uv.lock](uv.lock).
+## Dependencies:
+- Docker Desktop (the container defined by [Dockerfile](Dockerfile) and [docker-compose.yml](docker-compose.yml) includes Python, `uv`, Quarto, and all required packages)
+- Git
+
+Python packages needed are listed in [pyproject.toml](pyproject.toml). The environment is locked in [uv.lock](uv.lock).
 
 ## Licenses:
 
@@ -71,4 +72,4 @@ Example Prompts:
 
 ## Link to the rendered report:
 
-[View the report](analysis/flood_fatality_prediction_report.html)
+[View the rendered report on GitHub Pages](https://ubc-mds-2026-27.github.io/DSCI-522-Predicting-Global-Flood-Impact-and-Damage/)
