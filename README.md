@@ -31,7 +31,20 @@ docker compose run --rm analysis-env uv run quarto render analysis/flood_fatalit
 ```
 Because `--rm` is used, the container stops and removes itself automatically when rendering finishes (if you start it with `docker compose up -d`, stop and remove it with `docker compose down`).
 
-Open `analysis/flood_fatality_prediction_report.html` to read the rendered report. The required Excel data file is included at `data/raw/Aggregated_Flood_Data.xlsx`.
+Open `analysis/flood_fatality_prediction_report.html` to read the rendered report. Or run the following command from the project root directory:
+
+- macOS:
+```bash
+open analysis/flood_fatality_prediction_report.html
+```
+
+- Windows (PowerShell):
+```powershell
+start analysis/flood_fatality_prediction_report.html
+```
+
+The required Excel data file is included at `data/raw/Aggregated_Flood_Data.xlsx`.
+
 
 For instructions on editing the code, adding packages, or contributing to this project, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
@@ -72,4 +85,4 @@ Example Prompts:
 
 ## Link to the rendered report:
 
-[View the rendered report on GitHub Pages](https://ubc-mds-2026-27.github.io/DSCI-522-Predicting-Global-Flood-Impact-and-Damage/)
+[View the rendered report on GitHub Pages](https://ubc-mds-2026-27.github.io/DSCI-522-Predicting-Global-Flood-Impact-and-Damage/analysis/flood_fatality_prediction_report.html)
