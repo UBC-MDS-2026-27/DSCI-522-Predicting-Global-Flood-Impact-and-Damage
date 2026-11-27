@@ -85,4 +85,4 @@ Example Prompts:
 
 ## Link to the rendered report:
 
-[View the rendered report on GitHub Pages](https://ubc-mds-2026-27.github.io/DSCI-522-Predicting-Global-Flood-Impact-and-Damage/analysis/flood_fatality_prediction_report.html)
+[View the rendered report on GitHub Pages](https://ubc-mds-2026-27.github.io/DSCI-522-Predicting-Global-Flood-Impact-and-Damage/)
