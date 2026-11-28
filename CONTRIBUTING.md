@@ -6,9 +6,9 @@ We welcome feedback, bug reports, suggestions and contributions to this data ana
 Create an associated issue in this repository. For a bug, illustrate the bug by describing how to reproduce it including at least one error message. For a suggestion, explain what you want to change and the reason.
 
 ## Set up environment
-We use Docker to ensure that all contributors work in the same environment with same Python and package versions. Please follow the ["How to run the analysis" in README](README.md#how-to-run-the-analysis) (download and install the Docker, clone the repository and enter the project directory, create an SSH key and download the image).
+We use Docker to ensure that all contributors work in the same environment with the same Python and package versions. Please follow the ["How to run the analysis" in README](README.md#how-to-run-the-analysis) (download and install the Docker, clone the repository and enter the project directory, create an SSH key and download the image).
 
-The detailed instructions to run the analysis lies in [README](README.md).
+The detailed instructions to run the analysis are in [README](README.md).
 
 ## Working in the container
 We use Positron to work inside the Docker container through SSH.
@@ -20,13 +20,13 @@ We use Positron to work inside the Docker container through SSH.
 git config --global user.name
 git config --global user.email
 ```
-if either is missing, set it by:
+If either is missing, set it by:
 ```bash
 git config --global user.name "Your Name"
 git config --global user.email "you@example.com"
 ```
 ### Connect to the container
-1. run the following while Docker Desktop opened: 
+1. run the following while Docker Desktop is open: 
 ```bash
 docker compose up -d
 docker compose ps
@@ -35,11 +35,11 @@ Confirm that `analysis-env` is running.
 
 2. Open Positron, open the Command Palette (`Cmd+Shift+P` on Mac, `Ctrl+Shift+P` on Windows). Type and run **Remote SSH: Show Remote Menu**, then pick **Connect to Host**.
 
-3. Enter `root@localhost:2222`. If asks for the platform of the remote host,, select **Linux** as the remote platform and accept the SSH host fingerprint.
+3. Enter `root@localhost:2222`. If it asks for the platform of the remote host, select **Linux** as the remote platform and accept the SSH host fingerprint.
 
 4. Click **Open Folder** in Positron and enter `/workspace`. 
 
-5.Open the Command Palette(same as step 2), select **Python: Select Interpreter**, then **Enter interpreter path...** and enter `/opt/venv/bin/python`.
+5. Open the Command Palette(same as step 2), select **Python: Select Interpreter**, then **Enter interpreter path...** and enter `/opt/venv/bin/python`.
 
 6. To check, run `import sys; print(sys.executable)` in the Console. It should print `/opt/venv/bin/python`.
 
@@ -60,7 +60,7 @@ docker compose down
 - **Port 2222 is already in use**: change the first `2222` in `docker-compose.yml` to another number (e.g. `2223`), and connect to that port instead.
 
 
-More details in : [Working in a container over ssh with Positron](https://ubc-dsci.github.io/reproducible-and-trustworthy-workflows-for-data-science/lectures/containers-ssh-positron.html)
+More details in: [Working in a container over ssh with Positron](https://ubc-dsci.github.io/reproducible-and-trustworthy-workflows-for-data-science/lectures/containers-ssh-positron.html)
 
 
 ## Make a Change
@@ -103,7 +103,7 @@ docker compose pull
 After re-rendering, copy it to `docs/index.html` and push by:
 ```bash
 mkdir -p docs
-cp <path-to-your-report>.html docs/index.html
+cp analysis/flood_fatality_prediction_report.html docs/index.html
 touch docs/.nojekyll
 ```
 
