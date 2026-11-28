@@ -26,7 +26,7 @@ git config --global user.name "Your Name"
 git config --global user.email "you@example.com"
 ```
 ### Connect to the container
-1. run the following while Docker Desktop opened: 
+1. run the following while Docker Desktop is open: 
 ```bash
 docker compose up -d
 docker compose ps
@@ -35,7 +35,7 @@ Confirm that `analysis-env` is running.
 
 2. Open Positron, open the Command Palette (`Cmd+Shift+P` on Mac, `Ctrl+Shift+P` on Windows). Type and run **Remote SSH: Show Remote Menu**, then pick **Connect to Host**.
 
-3. Enter `root@localhost:2222`. If it asks for the platform of the remote host,, select **Linux** as the remote platform and accept the SSH host fingerprint.
+3. Enter `root@localhost:2222`. If it asks for the platform of the remote host, select **Linux** as the remote platform and accept the SSH host fingerprint.
 
 4. Click **Open Folder** in Positron and enter `/workspace`. 
 
