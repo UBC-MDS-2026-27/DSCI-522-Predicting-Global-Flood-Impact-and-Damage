@@ -6,9 +6,9 @@ We welcome feedback, bug reports, suggestions and contributions to this data ana
 Create an associated issue in this repository. For a bug, illustrate the bug by describing how to reproduce it including at least one error message. For a suggestion, explain what you want to change and the reason.
 
 ## Set up environment
-We use Docker to ensure that all contributors work in the same environment with same Python and package versions. Please follow the ["How to run the analysis" in README](README.md#how-to-run-the-analysis) (download and install the Docker, clone the repository and enter the project directory, create an SSH key and download the image).
+We use Docker to ensure that all contributors work in the same environment with the same Python and package versions. Please follow the ["How to run the analysis" in README](README.md#how-to-run-the-analysis) (download and install the Docker, clone the repository and enter the project directory, create an SSH key and download the image).
 
-The detailed instructions to run the analysis lies in [README](README.md).
+The detailed instructions to run the analysis are in [README](README.md).
 
 ## Working in the container
 We use Positron to work inside the Docker container through SSH.
@@ -20,7 +20,7 @@ We use Positron to work inside the Docker container through SSH.
 git config --global user.name
 git config --global user.email
 ```
-if either is missing, set it by:
+If either is missing, set it by:
 ```bash
 git config --global user.name "Your Name"
 git config --global user.email "you@example.com"
@@ -60,7 +60,7 @@ docker compose down
 - **Port 2222 is already in use**: change the first `2222` in `docker-compose.yml` to another number (e.g. `2223`), and connect to that port instead.
 
 
-More details in : [Working in a container over ssh with Positron](https://ubc-dsci.github.io/reproducible-and-trustworthy-workflows-for-data-science/lectures/containers-ssh-positron.html)
+More details in: [Working in a container over ssh with Positron](https://ubc-dsci.github.io/reproducible-and-trustworthy-workflows-for-data-science/lectures/containers-ssh-positron.html)
 
 
 ## Make a Change
