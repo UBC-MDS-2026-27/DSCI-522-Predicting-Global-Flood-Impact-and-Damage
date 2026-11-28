@@ -35,11 +35,11 @@ Confirm that `analysis-env` is running.
 
 2. Open Positron, open the Command Palette (`Cmd+Shift+P` on Mac, `Ctrl+Shift+P` on Windows). Type and run **Remote SSH: Show Remote Menu**, then pick **Connect to Host**.
 
-3. Enter `root@localhost:2222`. If asks for the platform of the remote host,, select **Linux** as the remote platform and accept the SSH host fingerprint.
+3. Enter `root@localhost:2222`. If it asks for the platform of the remote host,, select **Linux** as the remote platform and accept the SSH host fingerprint.
 
 4. Click **Open Folder** in Positron and enter `/workspace`. 
 
-5.Open the Command Palette(same as step 2), select **Python: Select Interpreter**, then **Enter interpreter path...** and enter `/opt/venv/bin/python`.
+5. Open the Command Palette(same as step 2), select **Python: Select Interpreter**, then **Enter interpreter path...** and enter `/opt/venv/bin/python`.
 
 6. To check, run `import sys; print(sys.executable)` in the Console. It should print `/opt/venv/bin/python`.
 
@@ -103,7 +103,7 @@ docker compose pull
 After re-rendering, copy it to `docs/index.html` and push by:
 ```bash
 mkdir -p docs
-cp <path-to-your-report>.html docs/index.html
+cp analysis/flood_fatality_prediction_report.html docs/index.html
 touch docs/.nojekyll
 ```
 
